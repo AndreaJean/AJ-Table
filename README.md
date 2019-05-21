@@ -12,5 +12,64 @@
 
 ```
 var myTable = new AjTable(opt) //定义表格对象
+```
+```
 myTable.init(thData, tdData) //生成表格
+```
+
+## 参数
+
+#### opt的默认设置
+
+```
+{
+    id: '',
+    fixTableWidth: true, // 表格总宽度，自适应或者等于显示区域
+    noTh: false, // 不使用表头
+    fixTh: true, // 表头固定
+    fixFirstCol: false, // 固定首列
+    fixLastCol: false, // 固定尾列
+    multiSelect: false, // 可多选
+    multiSelColWidth: 40, // 多选列宽
+    sortKey: '',
+    sortType: '',
+    switchSet: {
+      padding: 4,
+      speed: 300,
+      easing: 'swing'
+    },
+    thStyle: {
+      bgColor: '',
+      height: '',
+      color: '',
+      fontSize: '',
+      fontBold: '',
+      align: '',
+      borderColor: ''
+    },
+    oddStyle: {
+      bgColor: '',
+      height: '',
+      color: '',
+      fontSize: '',
+      fontBold: '',
+      borderColor: ''
+    },
+    evenStyle: {
+      bgColor: '',
+      height: '',
+      color: '',
+      fontSize: '',
+      fontBold: '',
+      borderColor: ''
+    },
+    callback: {
+      sort: null,
+      multiSelect: null,
+      editOver: null,
+      btnClick: null,
+      switchOver: null,
+      over: null
+    }
+  }
 ```
