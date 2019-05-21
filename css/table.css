@@ -1,0 +1,360 @@
+.xc-th-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  z-index: 2;
+  text-decoration: inherit;
+}
+.xc-th {
+  position: absolute;
+  border-collapse: collapse;
+  box-sizing: border-box;
+  border: none;
+  text-decoration: inherit;
+}
+.xc-th-head>tr>th {
+  position: relative;
+  border: none;
+  padding: 0;
+  border-bottom: 1px solid #ebeef5;
+  border-right: 1px solid #ebeef5;
+  background: #f5f7fa;
+  height: 32px;
+  font-weight: inherit;
+  text-decoration: inherit;
+}
+.xc-th-cell-scrollbar {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-bottom: 1px solid #ebeef5;
+  box-sizing: content-box;
+  background: inherit;
+}
+.xc-th-cell {
+  display: block;
+  box-sizing: border-box;
+  font: inherit;
+  font-weight: bold;
+  color: inherit;
+  vertical-align: middle;
+  text-decoration: inherit;
+  padding: 0 10px;
+  white-space:nowrap;
+}
+.xc-th-icon-pre, .xc-th-icon-next {
+  display: none;
+}
+
+/****************************** 单元格 ******************************/
+
+.xc-td-box {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow-y: auto;
+  text-decoration: inherit;
+  box-sizing: border-box;
+}
+.xc-td-no-data{
+  position: absolute;
+  top:40%;
+  left:50%;
+  display: block;
+  width:100px;
+  margin-left:-50px;
+  text-align: center;
+  font-size: 14px;
+  color:#666;
+}
+.xc-td {
+  border-collapse: collapse;
+  box-sizing: border-box;
+  border: none;
+  margin-bottom: -1px;
+  text-decoration: inherit;
+  background: #fff;
+}
+.xc-td>tbody {
+  text-decoration: inherit;
+}
+.xc-td>tbody>tr {
+  text-decoration: inherit;
+}
+.xc-td>tbody>tr>td {
+  position: relative;
+  border: none;
+  border-right: 1px solid #ebeef5;
+  border-bottom: 1px solid #ebeef5;
+  padding: 5px 0;
+  height: 32px;
+  text-overflow: ellipsis;
+  text-decoration: inherit;
+}
+.xc-td>tbody>tr:nth-child(even)>td {
+  background: #f9fafb;
+}
+.xc-td>tbody>tr:hover>td {
+  background: #F5F7FA;
+}
+.xc-td-cell {
+  padding: 0 10px;
+  box-sizing: border-box;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  text-decoration: inherit;
+}
+.xc-td-img {
+  vertical-align: middle;
+}
+.xc-td-text {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  vertical-align: middle;
+  text-decoration: inherit;
+  line-height: 24px;
+}
+.xc-td-text-input {
+  display: none;
+  width: 90%;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  text-indent: 6px;
+  background: none;
+  outline: none;
+}
+.xc-td-btn {
+  margin: 0 5px;
+  padding: 5px 10px;
+  border: 1px solid #2185d0;
+  border-radius: 4px;
+  background: #fff;
+  color: #2185d0;
+  cursor: pointer;
+  outline: none;
+}
+.xc-td-btn:hover {
+  border: 1px solid #409eff;
+  color: #409eff;
+}
+.xc-td-btn-icon {
+  margin-right: 2px;
+  vertical-align: text-bottom;
+}
+.xc-td-merge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: transparent;
+  border-bottom: 1px solid #ebeef5;
+  padding: 0 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-all;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  z-index: 2;
+}
+
+/****************************** 排序 ******************************/
+
+.xc-sort {
+  position: relative;
+  height: 12px;
+  width: 12px;
+  margin-left: 5px;
+  vertical-align: middle;
+  cursor: pointer;
+  display: inline-flex;
+}
+.xc-sort-icon {
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+  position: absolute;
+  left: 0;
+}
+.xc-sort-icon.asc {
+  border-bottom-color: #c0c4cc;
+  top: -5px;
+}
+.xc-sort-icon.desc {
+  border-top-color: #c0c4cc;
+  bottom: -5px;
+}
+.xc-sort-th.asc .xc-sort-icon.asc {
+  border-bottom-color: #409eff;
+}
+.xc-sort-th.desc .xc-sort-icon.desc {
+  border-top-color: #409eff;
+}
+
+/****************************** 多选列 ******************************/
+
+.xc-chk-cell {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-bottom: 1px solid #ebeef5;
+  border-right: 1px solid #ebeef5;
+  background: inherit;
+  box-sizing: content-box;
+}
+.xc-chk-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border: 1px solid #dcdfe6;
+  border-radius: 2px;
+  background: #fff;
+  margin-right: 5px;
+  vertical-align: text-bottom;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: border-color .25s cubic-bezier(.71, -.46, .29, 1.46), background-color .25s cubic-bezier(.71, -.46, .29, 1.46);
+}
+.xc-chk-box:hover {
+  border-color: #409eff;
+}
+.xc-chk-box:after {
+  box-sizing: content-box;
+  content: "";
+  border: 1px solid #fff;
+  border-left: 0;
+  border-top: 0;
+  height: 7px;
+  left: 4px;
+  position: absolute;
+  top: 1px;
+  transform: rotate(45deg) scaleY(0);
+  width: 3px;
+  transition: transform .15s ease-in .05s;
+  transform-origin: center;
+}
+.xc-chk-box.checked, .xc-chk-box.indeterminate {
+  background-color: #409eff;
+  border-color: #409eff;
+}
+.xc-chk-box.checked:after {
+  transform: rotate(45deg) scaleY(1);
+}
+.xc-chk-box.indeterminate:before {
+  content: "";
+  position: absolute;
+  display: block;
+  background-color: #fff;
+  height: 2px;
+  transform: scale(.5);
+  left: 0;
+  right: 0;
+  top: 5px;
+}
+
+/****************************** 开关 ******************************/
+
+.xc-switch {
+  position: relative;
+  display: inline-block;
+  height: 28px;
+  box-sizing: border-box;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.xc-switch-true, .xc-switch-false {
+  position: relative;
+  display: inline-block;
+  width: auto;
+  height: 28px;
+  line-height: 28px;
+  padding: 0 12px;
+  border-radius: 14px;
+  color: #fff;
+  box-sizing: border-box;
+}
+.xc-switch-true {
+  background: #2d8cf0;
+  padding-right: 31px;
+  display: none;
+}
+.xc-switch-false {
+  background: #666666;
+  padding-left: 31px;
+}
+.xc-switch-icon {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  background: #fff;
+  z-index: 2;
+}
+.xc-switch.open .xc-switch-true {
+  display: inline-block;
+}
+.xc-switch.open .xc-switch-false {
+  display: none;
+}
+
+/****************************** 固定列 ******************************/
+
+.xc-fix-th {
+  position: absolute;
+  top: 0;
+  z-index: 4;
+  display: table;
+  border: none;
+  padding: 0;
+  border-bottom: 1px solid #ebeef5;
+  border-right: 1px solid #ebeef5;
+  border-left: 1px solid #ebeef5;
+  background: #f5f7fa;
+  height: 32px;
+  line-height: 32px;
+  font-weight: inherit;
+  text-decoration: inherit;
+}
+.xc-fix-th .xc-th-cell {
+  display: table-cell;
+  vertical-align: middle;
+}
+.xc-fix-th.last {
+  box-shadow: 0 0 10px rgba(0, 0, 0, .12);
+}
+.xc-fix-td {
+  position: absolute;
+  top: 0;
+  z-index: 3;
+  overflow: hidden;
+}
+.xc-fix-td.last {
+  box-shadow: 0 0 10px rgba(0, 0, 0, .12);
+}
+.xc-fix-td.last .xc-td {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
