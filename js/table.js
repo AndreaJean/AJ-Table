@@ -1,10 +1,4 @@
-/**
- *
- *
- * @param {*} options
- * @returns 表格对象
- */
-var XcTable = function (options) {
+var AjTable = function (options) {
   var newObj = {
     thData: [],
     tdData: [],

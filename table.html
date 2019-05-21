@@ -18,13 +18,12 @@
 
 </html>
 <script type="text/javascript" src="js/jquery.min.js"></script>
-<!-- <script type="text/javascript" src="js/util.js"></script> -->
 <script type="text/javascript" src="data/table.js"></script>
 <script type="text/javascript" src="js/table.js"></script>
 <script type="text/javascript">
   window.onload = function () {
-    window.myTable = new XcTable(opt)
-    window.myTable.init(thData, tdData)
+    var myTable = new AjTable(opt)
+    myTable.init(thData, tdData)
     setTimeout(function () {
       $('.parent2').css('display', 'block')
     }, 10)
