@@ -1,4 +1,4 @@
-# 功能简介
+# AJ-Table
 
 基于js，jquery的table插件。
 
