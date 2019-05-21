@@ -10,9 +10,7 @@
 
 ## 调用
 
-```定义表格对象
-var myTable = new AjTable(opt)
 ```
-```生成表格
-myTable.init(thData, tdData)
+var myTable = new AjTable(opt) //定义表格对象
+myTable.init(thData, tdData) //生成表格
 ```
