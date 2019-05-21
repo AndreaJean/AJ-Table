@@ -11,7 +11,7 @@ var thData = [
   {key: 'marriage', label: '婚否', type: 'switch', width: '10%', align: 'center', trueVal: '1', trueLabel: '已婚', falseVal: '2', falseLabel: '未婚'},
   {key: 'sex', label: '性别性别', type: 'text', width: '10%', color: '', align: 'center', mergeCell: true},
   {key: 'photo', label: '照片', type: 'img', width: '10%', align: 'center', imgW: '', imgH: '20px'},
-  // {key: 'custom1', label: '标签', type: 'html', width: '', align: 'left', htmlCode: '<h2>自定义HTML片断</h2>'},
+  {key: 'custom1', label: '标签', type: 'html', width: '', align: 'left', htmlCode: '<h2>自定义HTML片断</h2>'},
   {key: 'action', label: '操作', type: 'button', width: '30%', align: 'center', btns: testBtn}
 ]
 var tdData = [
@@ -27,13 +27,13 @@ var tdData = [
 ]
 var opt = {
   id: 'tableDemo',
-  fixTableWidth: true, // 表格总宽度是否固定为显示区域宽
-  noTh: false, // 不使用表头
-  fixTh: true, // 表头固定
-  fixFirstCol: false, // 固定首列
-  fixLastCol: false, // 固定尾列
-  multiSelect: true, // 可多选
-  multiSelColWidth: 40, // 多选列宽
+  fixTableWidth: true,
+  noTh: false,
+  fixTh: true,
+  fixFirstCol: false,
+  fixLastCol: false,
+  multiSelect: true,
+  multiSelColWidth: 40,
   sortKey: 'name',
   sortType: 'asc',
   switchSet: {
@@ -84,7 +84,6 @@ var opt = {
     },
     over: function (data) {
       console.log('表格加载完毕')
-      // window.myTable.$_reviewMultiSelect([0, 1, 2, 3])
     }
   }
 
