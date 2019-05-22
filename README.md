@@ -8,6 +8,12 @@
 
 文字内容单元格支持功能：双击修改内容，同列合并相邻等值单元格。
 
+## 引用
+```html
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/table.js"></script>
+```
+
 ## 调用
 
 ```JavaScript
