@@ -60,18 +60,17 @@ var AjTable = function (options) {
     createHtml () {
       var htmlTh = '<thead class="xc-th-head"><tr>' + this.createTh() + '</tr></thead>'
       var htmlTd = '<tbody class="xc-th-body">' + this.createRow() + '</tbody>'
+      var htmlThBox = '<div class="xc-th-box"><table class="xc-th" cellpadding="0" cellspacing="0" border="0">' + htmlTh + '</table></div>'
+      var htmlTdBox = '<div class="xc-td-box"><table class="xc-td" cellpadding="0" cellspacing="0" border="0">' + htmlTd + '</table></div>'
+      var htmlNoData = '<div class="xc-td-box"><span class="xc-td-no-data">暂无数据</span></div>'
+      var htmlThTd = '<div class="xc-td-box"><table class="xc-td" cellpadding="0" cellspacing="0" border="0">' + htmlTh + htmlTd + '</table></div>'
       var html = ''
       if (this.option.noTh) {
-        html += '<div class="xc-td-box"><table class="xc-td" cellpadding="0" cellspacing="0" border="0">' + htmlTd + '</table></div>'
+        html += this.noDataFlag ? htmlNoData : htmlTdBox
       } else if (this.option.fixTh || this.option.fixFirst || this.option.fixLast) {
-        html += '<div class="xc-th-box"><table class="xc-th" cellpadding="0" cellspacing="0" border="0">' + htmlTh + '</table></div>'
-        if (this.noDataFlag) {
-          html += '<div class="xc-td-box"><span class="xc-td-no-data">暂无数据</span></div>'
-        } else {
-          html += '<div class="xc-td-box"><table class="xc-td" cellpadding="0" cellspacing="0" border="0">' + htmlTd + '</table></div>'
-        }
+        html += htmlThBox + (this.noDataFlag ? htmlNoData : htmlTdBox)
       } else {
-        html += '<div class="xc-td-box"><table class="xc-td" cellpadding="0" cellspacing="0" border="0">' + htmlTh + htmlTd + '</table></div>'
+        html += this.noDataFlag ? (htmlThBox + htmlNoData) : htmlThTd
       }
       this.box.append(html)
       this.thBox = this.box.find('.xc-th-box')
@@ -88,6 +87,7 @@ var AjTable = function (options) {
                   'background-color:' + opt.bgColor + ';' +
                   'height:' + opt.height + ';'
       var cellStyle = 'color:' + opt.color + ';' +
+                  // 'line-height:' + opt.height + ';' +
                   'font-size:' + opt.fontSize + ';' +
                   'font-weight:' + opt.fontBold + ';' +
                   'text-align:' + opt.align + ';'
@@ -153,7 +153,7 @@ var AjTable = function (options) {
         inner = '<span class="xc-td-text no">' + (rowIndex + 1) + '</span>'
         break
       case 'text':
-        inner = this.addText(col, data)
+        inner = this.addText(col, data, style)
         break
       case 'img':
         inner = this.addImg(col, data)
@@ -186,12 +186,13 @@ var AjTable = function (options) {
                   'width:' + width + 'px;' +
                   'border-color:' + opt.borderColor + ';' +
                   'text-align:' + (col.align || opt.align) + ';'
-      style.cell = 'height:' + opt.height + ';' +
-                  'width:' + width + 'px;' +
-                  // 'line-height:' + opt.height + ';' +
+      style.cell = 'width:' + width + 'px;' +
+                  // 'height:' + opt.height + ';' +
+                  'line-height:' + opt.height + ';' +
                   'color:' + (col.color || opt.color) + ';' +
                   'font-size:' + opt.fontSize + ';' +
                   'font-weight:' + opt.fontBold + ';'
+      style.text = 'line-height:' + opt.height + ';'
       return style
     },
     // 添加多选单元格
@@ -204,10 +205,10 @@ var AjTable = function (options) {
       return html
     },
     // 添加文字内容
-    addText (col, data) {
-      var style = ''
-      if (col.break) {
-        style = 'word-wrap:break-word;white-space:unset;'
+    addText (col, data, styleObj) {
+      var style = styleObj.text
+      if (col.isBreak) {
+        style += 'word-wrap:break-word;white-space:unset;'
       }
       var inner = '<span title="' + data[col.key] + '" class="xc-td-text ' + col.key + '" style="' + style + '">' + data[col.key] + '</span>'
       if (col.isEdit) {

@@ -280,6 +280,7 @@
   box-sizing: border-box;
   border-radius: 15px;
   cursor: pointer;
+  line-height: 28px;
 }
 .xc-switch-true, .xc-switch-false {
   position: relative;

@@ -4,14 +4,14 @@ var testBtn = [
   {key: 'delete', label: '删除', iconClass: 'iconfont icon-shanchu'}
 ]
 var thData = [
-  {key: 'no', label: '序号', type: 'no', width: '10%', color: '', align: 'center'},
-  {key: 'name', label: '姓名', type: 'text', width: '10%', color: 'red', align: 'left', sort: true, break: true},
-  {key: 'age', label: '年龄', type: 'text', width: '10%', color: '', align: 'left', isEdit: true, sort: true},
-  {key: 'nationality', label: '国籍', type: 'text', width: '10%', color: '', align: 'left'},
+  {key: 'no', label: '序号', type: 'no', width: '20%', color: '', align: 'center'},
+  {key: 'name', label: '姓名', type: 'text', width: '10%', color: 'red', align: 'left', sort: true, isBreak: false},
+  {key: 'age', label: '年龄', type: 'text', width: '20%', color: '', align: 'left', isEdit: true, sort: true},
+  {key: 'nationality', label: '国籍', type: 'text', width: '20%', color: '', align: 'left'},
   {key: 'marriage', label: '婚否', type: 'switch', width: '10%', align: 'center', trueVal: '1', trueLabel: '已婚', falseVal: '2', falseLabel: '未婚'},
   {key: 'sex', label: '性别性别', type: 'text', width: '10%', color: '', align: 'center', mergeCell: true},
-  {key: 'photo', label: '照片', type: 'img', width: '10%', align: 'center', imgW: '', imgH: '20px'},
-  {key: 'custom1', label: '标签', type: 'html', width: '', align: 'left', htmlCode: '<h2>自定义HTML片断</h2>'},
+  {key: 'photo', label: '照片', type: 'img', width: '10%', align: 'center', imgW: '', imgH: '80px'},
+  // {key: 'custom1', label: '标签', type: 'html', width: '', align: 'left', htmlCode: '<h2>自定义HTML片断</h2>'},
   {key: 'action', label: '操作', type: 'button', width: '30%', align: 'center', btns: testBtn}
 ]
 var tdData = [
@@ -43,7 +43,7 @@ var opt = {
   },
   thStyle: {
     bgColor: '',
-    height: '50px',
+    height: '',
     color: '',
     fontSize: '14px',
     fontBold: '',
@@ -52,7 +52,7 @@ var opt = {
   },
   oddStyle: {
     bgColor: '#fff',
-    height: '40px',
+    height: '50px',
     color: 'blue',
     fontSize: '',
     fontBold: '',
@@ -60,7 +60,7 @@ var opt = {
   },
   evenStyle: {
     bgColor: '',
-    height: '',
+    height: '50px',
     color: '',
     fontSize: '',
     fontBold: '',
