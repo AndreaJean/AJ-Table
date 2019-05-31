@@ -1,5 +1,5 @@
-var AjTable = function (options) {
-  var newObj = {
+let AjTable = function (options) {
+  let newObj = {
     thData: [],
     tdData: [],
     box: null,
@@ -16,7 +16,7 @@ var AjTable = function (options) {
     option: {},
     myTableInterval: {},
     init (th, td) {
-      var errorMessage = this.checkData()
+      let errorMessage = this.checkData()
       if (errorMessage.length) {
         alert(errorMessage)
         return
@@ -43,7 +43,7 @@ var AjTable = function (options) {
     },
     // 数据格式校验
     checkData () {
-      var str = ''
+      let str = ''
       this.thData.forEach(item => {
         if (item.isEdit && item.mergeCell) {
           str = '“' + item.label + '”列属性设置错误！可编辑内容列不可合并单元格！'
@@ -58,13 +58,13 @@ var AjTable = function (options) {
     },
     // 生成html
     createHtml () {
-      var htmlTh = '<thead class="xc-th-head"><tr>' + this.createTh() + '</tr></thead>'
-      var htmlTd = '<tbody class="xc-th-body">' + this.createRow() + '</tbody>'
-      var htmlThBox = '<div class="xc-th-box"><table class="xc-th" cellpadding="0" cellspacing="0" border="0">' + htmlTh + '</table></div>'
-      var htmlTdBox = '<div class="xc-td-box"><table class="xc-td" cellpadding="0" cellspacing="0" border="0">' + htmlTd + '</table></div>'
-      var htmlNoData = '<div class="xc-td-box"><span class="xc-td-no-data">暂无数据</span></div>'
-      var htmlThTd = '<div class="xc-td-box"><table class="xc-td" cellpadding="0" cellspacing="0" border="0">' + htmlTh + htmlTd + '</table></div>'
-      var html = ''
+      let htmlTh = '<thead class="xc-th-head"><tr>' + this.createTh() + '</tr></thead>'
+      let htmlTd = '<tbody class="xc-th-body">' + this.createRow() + '</tbody>'
+      let htmlThBox = '<div class="xc-th-box"><table class="xc-th" cellpadding="0" cellspacing="0" border="0">' + htmlTh + '</table></div>'
+      let htmlTdBox = '<div class="xc-td-box"><table class="xc-td" cellpadding="0" cellspacing="0" border="0">' + htmlTd + '</table></div>'
+      let htmlNoData = '<div class="xc-td-box"><span class="xc-td-no-data">暂无数据</span></div>'
+      let htmlThTd = '<div class="xc-td-box"><table class="xc-td" cellpadding="0" cellspacing="0" border="0">' + htmlTh + htmlTd + '</table></div>'
+      let html = ''
       if (this.option.noTh) {
         html += this.noDataFlag ? htmlNoData : htmlTdBox
       } else if (this.option.fixTh || this.option.fixFirst || this.option.fixLast) {
@@ -82,22 +82,22 @@ var AjTable = function (options) {
     },
     // 生成表头
     createTh () {
-      var opt = this.option.thStyle
-      var thStyle = 'border-color:' + opt.borderColor + ';' +
+      let opt = this.option.thStyle
+      let thStyle = 'border-color:' + opt.borderColor + ';' +
                   'background-color:' + opt.bgColor + ';' +
                   'height:' + opt.height + ';'
-      var cellStyle = 'color:' + opt.color + ';' +
+      let cellStyle = 'color:' + opt.color + ';' +
                   // 'line-height:' + opt.height + ';' +
                   'font-size:' + opt.fontSize + ';' +
                   'font-weight:' + opt.fontBold + ';' +
                   'text-align:' + opt.align + ';'
 
-      var html = ''
+      let html = ''
       this.thData.forEach((item, i) => {
-        var sortIcon = ''
-        var sortStle = ''
-        var sortAttr = ''
-        var sortClass = ''
+        let sortIcon = ''
+        let sortStle = ''
+        let sortAttr = ''
+        let sortClass = ''
         if (item.sort) {
           sortIcon = '<span class="xc-sort"><i class="xc-sort-icon asc"></i><i class="xc-sort-icon desc"></i></span>'
           sortStle = 'cursor:pointer;'
@@ -114,7 +114,7 @@ var AjTable = function (options) {
         }
         // 修补因出现滚动条产生的空白
         if (i === this.colNum - 1 && this.option.fixTh) {
-          var st = 'width:' + this.option.scrollBarWidth + 'px;' +
+          let st = 'width:' + this.option.scrollBarWidth + 'px;' +
           'right:-' + (this.option.scrollBarWidth + 1) + 'px;'
           html += '<div class="xc-th-cell-scrollbar" style="' + st + '""></div>'
         }
@@ -124,7 +124,7 @@ var AjTable = function (options) {
     },
     // 生成数据行
     createRow () {
-      var html = ''
+      let html = ''
       this.tdData.forEach((row, index) => {
         html += '<tr row-data=\'' + JSON.stringify(row) + '\'>'
         this.thData.forEach((col, i) => {
@@ -136,18 +136,18 @@ var AjTable = function (options) {
     },
     // 生成单元格
     createTd (col, rowIndex, colIndex) {
-      var style = rowIndex % 2 === 0 ? this.getTdStyle(this.option.oddStyle, col) : this.getTdStyle(this.option.evenStyle, col)
-      var data = this.tdData[rowIndex]
-      var editAttr = 'class="' + (col.isEdit ? 'xc-td-edit' : '') + '" ' +
+      let style = rowIndex % 2 === 0 ? this.getTdStyle(this.option.oddStyle, col) : this.getTdStyle(this.option.evenStyle, col)
+      let data = this.tdData[rowIndex]
+      let editAttr = 'class="' + (col.isEdit ? 'xc-td-edit' : '') + '" ' +
                       'row-index="' + rowIndex + '" ' +
                       'col-key="' + (col.key || '') + '"'
-      var html = '<td style="' + style.td + '" ' + editAttr + '>'
+      let html = '<td style="' + style.td + '" ' + editAttr + '>'
       if (this.option.multiSelect && colIndex === 0) {
         html += this.addChkCell()
       }
       html += '<div style="' + style.cell + '" class="xc-td-cell">'
 
-      var inner = ''
+      let inner = ''
       switch (col.type) {
       case 'no':
         inner = '<span class="xc-td-text no">' + (rowIndex + 1) + '</span>'
@@ -174,14 +174,14 @@ var AjTable = function (options) {
     },
     // 获取单元格样式
     getTdStyle (opt, col) {
-      var width = col.width || ''
+      let width = col.width || ''
       if (width.indexOf('%') !== -1) {
-        var tableW = this.box.width() - this.option.scrollBarWidth - (this.option.multiSelect ? this.option.multiSelColWidth : 0)
+        let tableW = this.box.width() - this.option.scrollBarWidth - (this.option.multiSelect ? this.option.multiSelColWidth : 0)
         width = Math.floor(tableW * parseInt(width) / 100) - 1
       } else {
         width = parseInt(width) - 1
       }
-      var style = []
+      let style = []
       style.td = 'background-color:' + opt.bgColor + ';' +
                   'width:' + width + 'px;' +
                   'border-color:' + opt.borderColor + ';' +
@@ -197,20 +197,20 @@ var AjTable = function (options) {
     },
     // 添加多选单元格
     addChkCell (flag) {
-      var style = 'left:' + (-this.option.multiSelColWidth) + 'px;' +
+      let style = 'left:' + (-this.option.multiSelColWidth) + 'px;' +
                   'width:' + this.option.multiSelColWidth + 'px;'
-      var html = '<div style="' + style + '" class="xc-chk-cell">' +
+      let html = '<div style="' + style + '" class="xc-chk-cell">' +
                     '<span class="xc-chk-box ' + (flag ? 'xc-th-chk' : 'xc-td-chk') + '"></span>' +
                   '</div>'
       return html
     },
     // 添加文字内容
     addText (col, data, styleObj) {
-      var style = styleObj.text
+      let style = styleObj.text
       if (col.isBreak) {
         style += 'word-wrap:break-word;white-space:unset;'
       }
-      var inner = '<span title="' + data[col.key] + '" class="xc-td-text ' + col.key + '" style="' + style + '">' + data[col.key] + '</span>'
+      let inner = '<span title="' + data[col.key] + '" class="xc-td-text ' + col.key + '" style="' + style + '">' + data[col.key] + '</span>'
       if (col.isEdit) {
         inner += '<input class="xc-td-text-input ' + col.key + '" type="text" />'
       }
@@ -218,9 +218,9 @@ var AjTable = function (options) {
     },
     // 添加图片内容
     addImg (col, data) {
-      var src = data[col.key]
-      var css = 'width:' + (col.imgW || '') + ';height:' + (col.imgH || '') + ';'
-      var attr = 'class="xc-td-img ' + col.key + '"' +
+      let src = data[col.key]
+      let css = 'width:' + (col.imgW || '') + ';height:' + (col.imgH || '') + ';'
+      let attr = 'class="xc-td-img ' + col.key + '"' +
                 'src="' + src + '"' +
                 'alt="' + col.label + '"' +
                 'style="' + css + '"'
@@ -228,9 +228,9 @@ var AjTable = function (options) {
     },
     // 添加开关
     addSwitch (col, data, rowIndex) {
-      var inner = ''
-      var attr = 'col-key="' + col.key + '" row-data=\'' + JSON.stringify(data) + '\' row-index=\'' + rowIndex + '\' true-val="' + col.trueVal + '" false-val="' + col.falseVal + '" name="' + col.name + '"'
-      var isOpen = data[col.key].toString() === col.trueVal
+      let inner = ''
+      let attr = 'col-key="' + col.key + '" row-data=\'' + JSON.stringify(data) + '\' row-index=\'' + rowIndex + '\' true-val="' + col.trueVal + '" false-val="' + col.falseVal + '" name="' + col.name + '"'
+      let isOpen = data[col.key].toString() === col.trueVal
       inner += '<div ' + attr + ' class="xc-switch ' + col.key + ' ' + (isOpen ? 'open' : '') + '">' +
                 '<span class="xc-switch-true"> ' + col.trueLabel + '</span>' +
                 '<i class="xc-switch-icon"></i>' +
@@ -240,9 +240,9 @@ var AjTable = function (options) {
     },
     // 添加按钮
     addBtns (col, rowIndex) {
-      var inner = ''
+      let inner = ''
       col.btns.forEach(btn => {
-        var attr = 'btn-key="' + btn.key + '" row-index="' + rowIndex + '"'
+        let attr = 'btn-key="' + btn.key + '" row-index="' + rowIndex + '"'
         inner += '<button ' + attr + ' class="xc-td-btn ' + col.key + ' ' + btn.key + '">' +
                     '<i class="xc-td-btn-icon ' + btn.iconClass + '"></i>' +
                     btn.label +
@@ -252,8 +252,8 @@ var AjTable = function (options) {
     },
     // 开关初始化
     switchInit () {
-      var vm = this
-      var target = this.tdTable.find('.xc-switch.open')
+      let vm = this
+      let target = this.tdTable.find('.xc-switch.open')
       target.each(function () {
         vm.switchAction($(this), true)
       })
@@ -318,7 +318,7 @@ var AjTable = function (options) {
       this.switchInit()
 
       // 固定列和绑定事件
-      var vm = this
+      let vm = this
       setTimeout(function () {
         if (vm.option.fixFirstCol && vm.tdTable.outerWidth() > vm.box.width()) {
           vm.fixCol('left')
@@ -334,7 +334,7 @@ var AjTable = function (options) {
     },
     // 表格宽度固定时计算表格实际宽度
     getFixTableWidth () {
-      var tableW = this.tdBox.width()
+      let tableW = this.tdBox.width()
       // 减去滚动条宽
       if (this.tdTable.height() > this.tdBox.height()) {
         tableW -= this.option.scrollBarWidth
@@ -355,11 +355,11 @@ var AjTable = function (options) {
     },
     // 最右侧一列表头及单元格右边线处理
     ajustRightBorder () {
-      var ths = this.thHead.find('th')
-      var tds = this.tdTable.find('td')
+      let ths = this.thHead.find('th')
+      let tds = this.tdTable.find('td')
       // console.log(this.tdTable.height(), this.tdBox.height())
       if (this.tdTable.height() <= this.tdBox.height()) {
-        for (var j = 1; j <= this.rowNum; j++) {
+        for (let j = 1; j <= this.rowNum; j++) {
           tds.eq(j * this.colNum - 1).css('border-right', 'none')
         }
         ths.eq(this.colNum - 1).css('border-right', 'none')
@@ -368,13 +368,13 @@ var AjTable = function (options) {
     },
     // 调整表头列宽
     ajustColWidth () {
-      var ths = this.thHead.find('th')
-      var tds = this.tdTable.find('td')
-      var tableW = this.getFixTableWidth()
+      let ths = this.thHead.find('th')
+      let tds = this.tdTable.find('td')
+      let tableW = this.getFixTableWidth()
 
       if (this.noDataFlag) {
         this.thData.forEach((col, i) => {
-          var width = col.width || ''
+          let width = col.width || ''
           if (width.indexOf('%') !== -1) {
             width = tableW * parseInt(col.width) / 100 + 'px'
           }
@@ -384,12 +384,12 @@ var AjTable = function (options) {
           this.thTable.width(tableW)
         }
       } else {
-        for (var i = 0; i < this.colNum; i++) {
-          var flag = this.emptyDataCol(i)
+        for (let i = 0; i < this.colNum; i++) {
+          let flag = this.emptyDataCol(i)
           if (flag) {
-            var w1 = tds.eq(i).find('.xc-td-cell').outerWidth()
-            var w2 = ths.eq(i).outerWidth()
-            var w = w1
+            let w1 = tds.eq(i).find('.xc-td-cell').outerWidth()
+            let w2 = ths.eq(i).outerWidth()
+            let w = w1
             if (!this.utils.checkNull(this.thData[i].width) && this.thData[i].type !== 'button') {
               w = w2 > w1 ? w2 : w1
               tds.eq(i).find('.xc-td-cell').css('width', w + 'px')
@@ -398,7 +398,7 @@ var AjTable = function (options) {
             }
             ths.eq(i).find('.xc-th-cell').css('width', w + 'px')
           } else {
-            var thw = ths.eq(i).outerWidth()
+            let thw = ths.eq(i).outerWidth()
             tds.eq(i).find('.xc-td-cell').css('width', thw + 'px')
             tds.eq(i).css('width', thw + 'px')
             ths.eq(i).find('.xc-th-cell').css('width', thw + 'px')
@@ -410,14 +410,14 @@ var AjTable = function (options) {
     },
     // 判断列宽未设置且该列无数据
     emptyDataCol (index) {
-      var th = this.thData[index]
-      var colStr = th.key
-      var type = th.type
+      let th = this.thData[index]
+      let colStr = th.key
+      let type = th.type
       if (type !== 'text') {
         return true
       }
-      var flag1 = this.utils.checkNull(th.width)
-      var flag2 = false
+      let flag1 = this.utils.checkNull(th.width)
+      let flag2 = false
       this.tdData.forEach(td => {
         if (this.utils.checkNull(td[colStr])) {
           flag2 = true
@@ -427,32 +427,33 @@ var AjTable = function (options) {
     },
     // 合并单元格
     mergeCell () {
-      for (var col = 0; col < this.colNum; col++) {
+      for (let col = 0; col < this.colNum; col++) {
         if (!this.thData[col].mergeCell) {
           continue
         }
-        var rowSpanRow = 0
-        for (var row = 1; row < this.rowNum; row++) {
-          var rowSpanTd = this.tdTable.find('tr').eq(rowSpanRow).find('td').eq(col)
-          var targetTd = this.tdTable.find('tr').eq(row).find('td').eq(col)
-          var rowSpanCell = rowSpanTd.find('.xc-td-cell')
-          var targetCell = targetTd.find('.xc-td-cell')
-          var rowSpanText = rowSpanTd.find('.xc-td-text').html()
-          var targetText = targetTd.find('.xc-td-text').html()
-          var rowSpanHeight = rowSpanTd.outerHeight()
-          var targetHeight = targetTd.outerHeight()
+        let rowSpanRow = 0
+        for (let row = 1; row < this.rowNum; row++) {
+          let rowSpanTd = this.tdTable.find('tr').eq(rowSpanRow).find('td').eq(col)
+          let targetTd = this.tdTable.find('tr').eq(row).find('td').eq(col)
+          let rowSpanCell = rowSpanTd.find('.xc-td-cell')
+          let targetCell = targetTd.find('.xc-td-cell')
+          let rowSpanText = rowSpanTd.find('.xc-td-text').html()
+          let targetText = targetTd.find('.xc-td-text').html()
+          let rowSpanHeight = rowSpanTd.outerHeight()
+          let targetHeight = targetTd.outerHeight()
           if (targetText === rowSpanText) {
             targetTd.css({'border-bottom-color': 'transparent', 'background': 'none'})
             targetCell.css('display', 'none')
-            var h = 0
+            let h = 0
+            let mergeDiv = null
             if (rowSpanTd.find('.xc-td-merge').length) {
-              var mergeDiv = rowSpanTd.find('.xc-td-merge')
+              mergeDiv = rowSpanTd.find('.xc-td-merge')
               h = (mergeDiv.outerHeight() + targetHeight) + 'px'
             } else {
-              var html = '<div class="xc-td-merge">' + rowSpanCell.html() + '</div>'
+              let html = '<div class="xc-td-merge">' + rowSpanCell.html() + '</div>'
               rowSpanTd.append(html).css({'border-bottom-color': 'transparent', 'background': 'none'})
               rowSpanCell.css('display', 'none')
-              var mergeDiv = rowSpanTd.find('.xc-td-merge')
+              mergeDiv = rowSpanTd.find('.xc-td-merge')
               h = (rowSpanHeight + targetHeight) + 'px'
             }
             mergeDiv.css({'height': h, 'line-height': h})
@@ -471,26 +472,26 @@ var AjTable = function (options) {
     },
     // 复制固定表头
     copyTh (pos) {
-      var html = pos === 'left' ? this.thTable.find('th:first').html() : this.thTable.find('th:last').html()
-      var style = pos === 'left' ? this.thTable.find('th:first').attr('style') : this.thTable.find('th:last').attr('style')
-      var styleL = this.option.multiSelect ? (pos + ':' + (this.option.multiSelColWidth - 1) + 'px;') : (pos + ':-1px;')
-      var styleR = this.thTable.find('.xc-th-cell-scrollbar').css('display') === 'none' ? (pos + ':0px;') : (pos + ':' + this.option.scrollBarWidth + 'px;')
+      let html = pos === 'left' ? this.thTable.find('th:first').html() : this.thTable.find('th:last').html()
+      let style = pos === 'left' ? this.thTable.find('th:first').attr('style') : this.thTable.find('th:last').attr('style')
+      let styleL = this.option.multiSelect ? (pos + ':' + (this.option.multiSelColWidth - 1) + 'px;') : (pos + ':-1px;')
+      let styleR = this.thTable.find('.xc-th-cell-scrollbar').css('display') === 'none' ? (pos + ':0px;') : (pos + ':' + this.option.scrollBarWidth + 'px;')
       style += pos === 'left' ? styleL : styleR
       html = '<div class="xc-fix-th ' + (pos === 'left' ? 'first' : 'last') + '" style="' + style + '">' + html + '</div>'
       this.thBox.append(html)
     },
     // 复制固定单元格
     copyTd (pos) {
-      var tableHtml = this.tdTable.prop('outerHTML')
-      var firstW = this.tdTable.find('td').eq(0).width()
-      var lastW = this.box.find('.xc-fix-th.last').outerWidth()
-      var styleL = 'width:' + (this.option.multiSelect ? (firstW + this.option.multiSelColWidth + 2 + 'px;') : (firstW + 2 + 'px;'))
-      var styleR = 'width:' + lastW + 'px;'
-      var style = pos + ':0px;' +
+      let tableHtml = this.tdTable.prop('outerHTML')
+      let firstW = this.tdTable.find('td').eq(0).width()
+      let lastW = this.box.find('.xc-fix-th.last').outerWidth()
+      let styleL = 'width:' + (this.option.multiSelect ? (firstW + this.option.multiSelColWidth + 2 + 'px;') : (firstW + 2 + 'px;'))
+      let styleR = 'width:' + lastW + 'px;'
+      let style = pos + ':0px;' +
                   'height:' + this.tdTable.outerHeight() + 'px;' +
                   (pos === 'left' ? styleL : styleR)
       // console.log(style)
-      var html = '<div class="xc-fix-td ' + (pos === 'left' ? 'first' : 'last') + '" style="' + style + '">' + tableHtml + '</div>'
+      let html = '<div class="xc-fix-td ' + (pos === 'left' ? 'first' : 'last') + '" style="' + style + '">' + tableHtml + '</div>'
       this.tdBox.append(html)
       this.fixFirst = this.box.find('.xc-fix-td.first')
       this.fixLast = this.box.find('.xc-fix-td.last')
@@ -508,10 +509,10 @@ var AjTable = function (options) {
     },
     // 多选
     multiSelectEvent () {
-      var vm = this
-      var thChk = vm.box.find('.xc-chk-box.xc-th-chk')
-      var tdChk = vm.tdTable.find('.xc-td-chk')
-      var tdChkFirst = vm.box.find('.xc-fix-td.first .xc-td-chk')
+      let vm = this
+      let thChk = vm.box.find('.xc-chk-box.xc-th-chk')
+      let tdChk = vm.tdTable.find('.xc-td-chk')
+      let tdChkFirst = vm.box.find('.xc-fix-td.first .xc-td-chk')
       thChk.unbind('click').click(function () {
         if (thChk.hasClass('checked')) {
           thChk.removeClass('checked')
@@ -544,7 +545,7 @@ var AjTable = function (options) {
     tdChkClick (target, box, thChk, chk) {
       target.toggleClass('checked')
 
-      var num = box.find('.xc-td-chk.checked').size()
+      let num = box.find('.xc-td-chk.checked').size()
       if (num === 0) {
         thChk.removeClass('checked').removeClass('indeterminate')
       } else if (num === this.rowNum) {
@@ -555,8 +556,8 @@ var AjTable = function (options) {
       this.option.callback.multiSelect(this.packData(chk))
     },
     packData (chk) {
-      var data = []
-      for (var i = 0; i < this.rowNum; i++) {
+      let data = []
+      for (let i = 0; i < this.rowNum; i++) {
         if (chk.eq(i).hasClass('checked')) {
           data.push(this.tdData[i])
         }
@@ -565,11 +566,11 @@ var AjTable = function (options) {
     },
     // 排序
     sortEvent () {
-      var vm = this
-      var target = vm.box.find('.xc-sort-th')
+      let vm = this
+      let target = vm.box.find('.xc-sort-th')
       target.unbind('click').click(function () {
-        var btn = $(this)
-        var obj = {}
+        let btn = $(this)
+        let obj = {}
         obj.key = btn.attr('sort-key')
 
         if (btn.hasClass('asc')) {
@@ -588,12 +589,12 @@ var AjTable = function (options) {
     },
     // 按钮点击事件
     btnClickEvent () {
-      var vm = this
-      var target = vm.tdBox.find('.xc-td-btn')
+      let vm = this
+      let target = vm.tdBox.find('.xc-td-btn')
       target.unbind('click').click(function () {
-        var btn = $(this)
-        var index = btn.attr('row-index')
-        var obj = {
+        let btn = $(this)
+        let index = btn.attr('row-index')
+        let obj = {
           key: btn.attr('btn-key'),
           data: vm.tdData[index]
         }
@@ -602,20 +603,20 @@ var AjTable = function (options) {
     },
     // 编辑
     editEvent () {
-      var vm = this
-      var target = vm.tdBox.find('.xc-td-edit')
+      let vm = this
+      let target = vm.tdBox.find('.xc-td-edit')
       target.unbind('dblclick').dblclick(function () {
-        var cell = $(this)
-        var index = cell.attr('row-index')
-        var ov = cell.find('.xc-td-text')
-        var nv = cell.find('.xc-td-text-input')
+        let cell = $(this)
+        let index = cell.attr('row-index')
+        let ov = cell.find('.xc-td-text')
+        let nv = cell.find('.xc-td-text-input')
         ov.css('display', 'none')
         nv.val(ov.html()).css('display', 'block').focus()
 
         nv.unbind('blur').blur(function () {
           ov.html(nv.val()).css('display', '')
           nv.css('display', 'none')
-          var obj = {
+          let obj = {
             editKey: cell.attr('col-key'),
             oldData: vm.thData[index],
             newValue: nv.val()
@@ -626,11 +627,11 @@ var AjTable = function (options) {
     },
     // 开关
     switchEvent () {
-      var vm = this
-      var target = vm.tdTable.find('.xc-switch')
+      let vm = this
+      let target = vm.tdTable.find('.xc-switch')
       target.unbind('click').click(function () {
-        var btn = $(this)
-        var obj = {
+        let btn = $(this)
+        let obj = {
           name: btn.attr('name'),
           editKey: btn.attr('col-key'),
           oldData: btn.attr('row-data'),
@@ -650,12 +651,12 @@ var AjTable = function (options) {
     },
     // 开关滑块动作
     switchAction (target, flag) {
-      var gap = this.option.switchSet.padding
-      var speed = this.option.switchSet.speed
-      var easing = this.option.switchSet.easing
-      var ball = target.find('.xc-switch-icon')
+      let gap = this.option.switchSet.padding
+      let speed = this.option.switchSet.speed
+      let easing = this.option.switchSet.easing
+      let ball = target.find('.xc-switch-icon')
       if (flag) {
-        var s = target.outerWidth() - ball.outerWidth() - gap
+        let s = target.outerWidth() - ball.outerWidth() - gap
         ball.animate({left: s + 'px'}, speed, easing)
       } else {
         ball.animate({left: gap + 'px'}, speed, easing)
@@ -663,7 +664,7 @@ var AjTable = function (options) {
     },
     // 表身横向滚动监听
     scrollListener () {
-      var vm = this
+      let vm = this
       vm.tdBox.scroll(function () {
         vm.thTable.css('left', vm.thTableLeft - vm.tdBox.scrollLeft())
         if (vm.fixFirst.length) {
@@ -678,7 +679,7 @@ var AjTable = function (options) {
         }
         if (vm.fixLast.length) {
           vm.fixLast.css('right', -vm.tdBox.scrollLeft())
-          var overflow = vm.tdTable.outerWidth() - vm.tdBox.innerWidth()
+          let overflow = vm.tdTable.outerWidth() - vm.tdBox.innerWidth()
           overflow += vm.option.multiSelect ? vm.option.multiSelColWidth : 0
           overflow += vm.thTable.find('.xc-th-cell-scrollbar').css('display') === 'none' ? 0 : vm.option.scrollBarWidth
           if (vm.tdBox.scrollLeft() !== overflow) {
@@ -696,9 +697,9 @@ var AjTable = function (options) {
     //
     // 回显多选
     $_reviewMultiSelect (indexList) {
-      var thChk = this.box.find('.xc-chk-box.xc-th-chk')
-      var tdChk = this.tdTable.find('.xc-td-chk')
-      var tdChkFirst = this.box.find('.xc-fix-td.first .xc-td-chk')
+      let thChk = this.box.find('.xc-chk-box.xc-th-chk')
+      let tdChk = this.tdTable.find('.xc-td-chk')
+      let tdChkFirst = this.box.find('.xc-fix-td.first .xc-td-chk')
       indexList.forEach(index => {
         tdChk.eq(index).addClass('checked')
         if (tdChkFirst.length) {
@@ -706,7 +707,7 @@ var AjTable = function (options) {
         }
       })
       if (tdChkFirst.length) {
-        var num2 = this.fixFirst.find('.xc-td-chk.checked').size()
+        let num2 = this.fixFirst.find('.xc-td-chk.checked').size()
         if (num2 === 0) {
           thChk.removeClass('checked').removeClass('indeterminate')
         } else if (num2 === this.rowNum) {
@@ -715,7 +716,7 @@ var AjTable = function (options) {
           thChk.addClass('indeterminate').removeClass('checked')
         }
       } else {
-        var num1 = this.tdTable.find('.xc-td-chk.checked').size()
+        let num1 = this.tdTable.find('.xc-td-chk.checked').size()
         if (num1 === 0) {
           thChk.removeClass('checked').removeClass('indeterminate')
         } else if (num1 === this.rowNum) {
@@ -734,11 +735,11 @@ var AjTable = function (options) {
   newObj.utils = {
     // 获取滚动条宽度
     getScrollWidth () {
-      var oDiv = document.createElement('DIV')
+      let oDiv = document.createElement('DIV')
       oDiv.style.cssText = 'position:absolute; top:-1000px; width:100px; height:100px; overflow:hidden;'
-      var noScroll = document.body.appendChild(oDiv).clientWidth
+      let noScroll = document.body.appendChild(oDiv).clientWidth
       oDiv.style.overflowY = 'scroll'
-      var scroll = oDiv.clientWidth
+      let scroll = oDiv.clientWidth
       document.body.removeChild(oDiv)
       return noScroll - scroll
     },
@@ -760,10 +761,10 @@ var AjTable = function (options) {
     },
     // 深拷贝
     deepCopy: function (source) {
-      var sourceCopy = null
+      let sourceCopy = null
       if (this.isObjectObject(source)) {
         sourceCopy = {}
-        for (var item in source) {
+        for (let item in source) {
           sourceCopy[item] = this.deepCopy(source[item])
         }
       } else if (this.isArray(source)) {
@@ -781,7 +782,7 @@ var AjTable = function (options) {
       return Array.isArray(obj) || Object.prototype.toString.call(obj) === '[object Array]'
     },
     isObject: function (obj) {
-      var type = typeof obj
+      let type = typeof obj
       return (type === 'function' || type === 'object') && !!obj
     },
     isObjectObject: function (val) {
