@@ -30,12 +30,13 @@ let opt = {
   fixTableWidth: true,
   noTh: false,
   fixTh: true,
-  fixFirstCol: false,
+  fixFirstCol: true,
   fixLastCol: false,
   multiSelect: true,
   multiSelColWidth: 40,
   sortKey: 'name',
   sortType: 'asc',
+  noDataText: '好像没有数据呢~~',
   switchSet: {
     padding: 4,
     speed: 300,
@@ -51,7 +52,7 @@ let opt = {
     borderColor: ''
   },
   oddStyle: {
-    bgColor: '#fff',
+    bgColor: '',
     height: '50px',
     color: 'blue',
     fontSize: '',

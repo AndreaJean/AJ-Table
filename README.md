@@ -39,6 +39,7 @@ myTable.init(thData, tdData) //生成表格
     multiSelColWidth: 40, // 多选列宽
     sortKey: '', // 排序字段名称
     sortType: '', // 排序方式，asc为升序，desc为降序
+    noDataText: '暂无数据', // 无数据时表身区域的显示内容，支持自定义html片断
     // 开关样式及效果
     switchSet: {
       padding: 4, // 滑块距边框距离

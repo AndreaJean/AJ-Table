@@ -62,7 +62,7 @@ let AjTable = function (options) {
       let htmlTd = '<tbody class="xc-th-body">' + this.createRow() + '</tbody>'
       let htmlThBox = '<div class="xc-th-box"><table class="xc-th" cellpadding="0" cellspacing="0" border="0">' + htmlTh + '</table></div>'
       let htmlTdBox = '<div class="xc-td-box"><table class="xc-td" cellpadding="0" cellspacing="0" border="0">' + htmlTd + '</table></div>'
-      let htmlNoData = '<div class="xc-td-box"><span class="xc-td-no-data">暂无数据</span></div>'
+      let htmlNoData = '<div class="xc-td-box"><span class="xc-td-no-data">' + this.option.noDataText + '</span></div>'
       let htmlThTd = '<div class="xc-td-box"><table class="xc-td" cellpadding="0" cellspacing="0" border="0">' + htmlTh + htmlTd + '</table></div>'
       let html = ''
       if (this.option.noTh) {
@@ -126,7 +126,7 @@ let AjTable = function (options) {
     createRow () {
       let html = ''
       this.tdData.forEach((row, index) => {
-        html += '<tr row-data=\'' + JSON.stringify(row) + '\'>'
+        html += '<tr row-data=\'' + JSON.stringify(row) + '\' row-index="' + index + '" class=\'xc-td-row\'>'
         this.thData.forEach((col, i) => {
           html += this.createTd(col, index, i)
         })
@@ -143,7 +143,7 @@ let AjTable = function (options) {
                       'col-key="' + (col.key || '') + '"'
       let html = '<td style="' + style.td + '" ' + editAttr + '>'
       if (this.option.multiSelect && colIndex === 0) {
-        html += this.addChkCell()
+        html += this.addChkCell(false, rowIndex)
       }
       html += '<div style="' + style.cell + '" class="xc-td-cell">'
 
@@ -196,11 +196,11 @@ let AjTable = function (options) {
       return style
     },
     // 添加多选单元格
-    addChkCell (flag) {
+    addChkCell (flag, rowIndex) {
       let style = 'left:' + (-this.option.multiSelColWidth) + 'px;' +
                   'width:' + this.option.multiSelColWidth + 'px;'
       let html = '<div style="' + style + '" class="xc-chk-cell">' +
-                    '<span class="xc-chk-box ' + (flag ? 'xc-th-chk' : 'xc-td-chk') + '"></span>' +
+                    '<span class="xc-chk-box ' + (flag ? 'xc-th-chk' : 'xc-td-chk') + '" row-index="' + (rowIndex || '') + '"></span>' +
                   '</div>'
       return html
     },
@@ -513,9 +513,13 @@ let AjTable = function (options) {
       let thChk = vm.box.find('.xc-chk-box.xc-th-chk')
       let tdChk = vm.tdTable.find('.xc-td-chk')
       let tdChkFirst = vm.box.find('.xc-fix-td.first .xc-td-chk')
+      let dataRow = vm.tdTable.find('.xc-td-row')
+      let dataRowFix = vm.box.find('.xc-fix-td .xc-td-row')
       thChk.unbind('click').click(function () {
         if (thChk.hasClass('checked')) {
           thChk.removeClass('checked')
+          dataRow.removeClass('checked-row')
+          dataRowFix.removeClass('checked-row')
           if (tdChkFirst.size()) {
             tdChkFirst.removeClass('checked')
           } else {
@@ -523,6 +527,8 @@ let AjTable = function (options) {
           }
         } else {
           thChk.removeClass('indeterminate').addClass('checked')
+          dataRow.addClass('checked-row')
+          dataRowFix.addClass('checked-row')
           if (tdChkFirst.size()) {
             tdChkFirst.addClass('checked')
           } else {
@@ -544,6 +550,11 @@ let AjTable = function (options) {
     },
     tdChkClick (target, box, thChk, chk) {
       target.toggleClass('checked')
+      let index = target.attr('row-index')
+      let tr = this.tdTable.find('.xc-td-row').eq(index)
+      let trFix=this.box.find('.xc-fix-td .xc-td-row').eq(index)
+      tr.toggleClass('checked-row')
+      trFix.toggleClass('checked-row')
 
       let num = box.find('.xc-td-chk.checked').size()
       if (num === 0) {
@@ -829,6 +840,7 @@ let AjTable = function (options) {
     multiSelColWidth: 40, // 多选列宽
     sortKey: '',
     sortType: '',
+    noDataText: '暂无数据',
     switchSet: {
       padding: 4,
       speed: 300,
