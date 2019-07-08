@@ -10,6 +10,7 @@
 
 ## 引用
 ```html
+<link rel="stylesheet" type="text/css" href="css/table.css">
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/table.js"></script>
 ```
