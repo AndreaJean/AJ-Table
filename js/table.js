@@ -62,7 +62,7 @@ let AjTable = function (options) {
       let num = 0
       this.thData.forEach(th => {
         if (!this.utils.checkNull(th.key)) {
-          th.key = 'col-class-' + num
+          th.key = th.type === 'no' ? 'no' : 'col-class-' + num
           num++
         }
       })
@@ -161,7 +161,7 @@ let AjTable = function (options) {
       let inner = ''
       switch (col.type) {
       case 'no':
-        inner = '<span class="xc-td-text ' + (col.key || 'no') + '">' + (rowIndex + 1) + '</span>'
+        inner = '<span class="xc-td-text ' + col.key + '">' + (rowIndex + 1) + '</span>'
         break
       case 'text':
         inner = this.addText(col, data, style)
