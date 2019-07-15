@@ -29,6 +29,7 @@ let AjTable = function (options) {
       }
       this.thData = th
       this.tdData = td
+      this.addColKey()
       if (!this.tdData || !this.tdData.length) {
         this.noDataFlag = true
         this.option.fixTh = true
@@ -55,6 +56,16 @@ let AjTable = function (options) {
         }
       })
       return str
+    },
+    // 为没有key的列设置key
+    addColKey () {
+      let num = 0
+      this.thData.forEach(th => {
+        if (!this.utils.checkNull(th.key)) {
+          th.key = 'col-class-' + num
+          num++
+        }
+      })
     },
     // 生成html
     createHtml () {
@@ -150,7 +161,7 @@ let AjTable = function (options) {
       let inner = ''
       switch (col.type) {
       case 'no':
-        inner = '<span class="xc-td-text no">' + (rowIndex + 1) + '</span>'
+        inner = '<span class="xc-td-text ' + (col.key || 'no') + '">' + (rowIndex + 1) + '</span>'
         break
       case 'text':
         inner = this.addText(col, data, style)
@@ -552,7 +563,7 @@ let AjTable = function (options) {
       target.toggleClass('checked')
       let index = target.attr('row-index')
       let tr = this.tdTable.find('.xc-td-row').eq(index)
-      let trFix=this.box.find('.xc-fix-td .xc-td-row').eq(index)
+      let trFix = this.box.find('.xc-fix-td .xc-td-row').eq(index)
       tr.toggleClass('checked-row')
       trFix.toggleClass('checked-row')
 
