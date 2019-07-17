@@ -16,7 +16,7 @@ let AjTable = function (options) {
     option: {},
     myTableInterval: {},
     init (th, td) {
-      let errorMessage = this.checkData()
+      let errorMessage = this.checkData(th)
       if (errorMessage.length) {
         alert(errorMessage)
         return
@@ -43,9 +43,9 @@ let AjTable = function (options) {
       this.displayListener()
     },
     // 数据格式校验
-    checkData () {
+    checkData (thSet) {
       let str = ''
-      this.thData.forEach(item => {
+      thSet.forEach(item => {
         if (item.isEdit && item.mergeCell) {
           str = '“' + item.label + '”列属性设置错误！可编辑内容列不可合并单元格！'
           return false
