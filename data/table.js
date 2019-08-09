@@ -5,9 +5,9 @@ let testBtn = [
 ]
 let thData = [
   {key: 'num', label: '序号', type: 'no', width: '20%', color: '', align: 'center'},
-  {key: 'name', label: '姓名', type: 'text', width: '10%', color: 'red', align: 'left', sort: true, isBreak: false},
+  {key: 'name', label: '姓名', type: 'text', width: '10%', color: 'red', align: 'left', sort: true, isBreak: false, preImg: 'https://wwc.alicdn.com/avatar/getAvatar.do?userNick=&width=50&height=50&type=sns&_input_charset=UTF-8'},
   {key: 'age', label: '年龄', type: 'text', width: '20%', color: '', align: 'left', isEdit: true, sort: true},
-  {key: 'nationality', label: '国籍', type: 'text', width: '20%', color: '', align: 'left'},
+  {key: 'nationality', label: '国籍', type: 'text', width: '20%', color: '', align: 'left', preIcon: 'icon-new-xinwen-copy'},
   {key: 'marriage', label: '婚否', type: 'switch', width: '10%', align: 'center', trueVal: '1', trueLabel: '已婚', falseVal: '2', falseLabel: '未婚'},
   {key: 'sex', label: '性别性别', type: 'text', width: '10%', color: '', align: 'center', mergeCell: true},
   {key: 'photo', label: '照片', type: 'img', width: '10%', align: 'center', imgW: '', imgH: '80px'},

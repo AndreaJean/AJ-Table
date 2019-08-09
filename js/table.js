@@ -218,10 +218,18 @@ let AjTable = function (options) {
     // 添加文字内容
     addText (col, data, styleObj) {
       let style = styleObj.text
+      let icon = ''
+      let img = ''
       if (col.isBreak) {
         style += 'word-wrap:break-word;white-space:unset;'
       }
-      let inner = '<span title="' + data[col.key] + '" class="xc-td-text ' + col.key + '" style="' + style + '">' + data[col.key] + '</span>'
+      if (col.preIcon) {
+        icon = '<i class="icon iconfont ' + col.preIcon + '"></i>'
+      }
+      if (col.preImg) {
+        img = '<img class="xc-td-text-img ' + col.key + '" src="' + col.preImg + '" />'
+      }
+      let inner = '<span title="' + data[col.key] + '" class="xc-td-text ' + col.key + '" style="' + style + '">' + img + icon + data[col.key] + '</span>'
       if (col.isEdit) {
         inner += '<input class="xc-td-text-input ' + col.key + '" type="text" />'
       }
@@ -340,6 +348,9 @@ let AjTable = function (options) {
         vm.bindEvent()
         if (vm.option.callback.over) {
           vm.option.callback.over()
+          if (vm.utils.checkNull(window.tableOverFunc) && vm.utils.checkNull(window.tableOverFunc[vm.option.id])) {
+            window.tableOverFunc[vm.option.id]()
+          }
         }
       }, 20)
     },

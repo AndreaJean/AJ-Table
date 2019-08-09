@@ -126,6 +126,20 @@
   text-decoration: inherit;
   line-height: 24px;
 }
+.xc-td-text .icon{
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  vertical-align: middle;
+  text-decoration: none;
+  margin-right:5px;
+}
+.xc-td-text-img{
+  margin-right:5px;
+  width:20px;
+  height:20px;
+  vertical-align: middle;
+}
 .xc-td-text-input {
   display: none;
   width: 90%;
