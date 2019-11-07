@@ -762,6 +762,9 @@ let AjTable = function (options) {
     // 重新加载数据
     $_setData (tdData) {
       this.init(this.thData, tdData)
+    },
+    $_reset () {
+      this.adjust()
     }
   }
   // 工具方法

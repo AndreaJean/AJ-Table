@@ -77,7 +77,7 @@
   border: none;
   margin-bottom: -1px;
   text-decoration: inherit;
-  background: #fff;
+  /* background: #fff; */
 }
 .xc-td>tbody {
   text-decoration: inherit;
@@ -227,8 +227,8 @@
   position: absolute;
   top: 0;
   height: 100%;
-  border-bottom: 1px solid #ebeef5;
-  border-right: 1px solid #ebeef5;
+  border-bottom:inherit;
+  border-right:inherit;
   background: inherit;
   box-sizing: content-box;
 }
