@@ -15,6 +15,7 @@
     <!-- </div>
   </div> -->
   <button id='reset'>reset</button>
+  <button id='addRow'>addRow</button>
 </body>
 
 </html>
@@ -30,6 +31,13 @@
     }, 10)
     $('#reset').click(function(){
       myTable.$_reset()
+    })
+    $('#addRow').click(function(){
+      myTable.$_addRow({name: '成吉思汗'})
+    })
+    $('#tableDemo').on('click','.delete',function(){
+      let index=$(this).attr('row-index')
+      myTable.$_deleteRow(index)
     })
   }
 </script>
@@ -68,7 +76,7 @@
   .main {
     position: relative;
     width: 80%;
-    height: 700px;
+    height: 300px;
     /* margin: 40px auto; */
     border: 1px solid #ebeef5;
     font-size: 14px;

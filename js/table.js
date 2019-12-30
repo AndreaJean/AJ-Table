@@ -27,8 +27,8 @@ let AjTable = function (options) {
         this.option.fixTh = true
         this.option.fixTableWidth = false
       }
-      this.thData = th
-      this.tdData = td
+      this.thData = this.utils.deepCopy(th)
+      this.tdData = this.utils.deepCopy(td)
       this.addColKey()
       if (!this.tdData || !this.tdData.length) {
         this.noDataFlag = true
@@ -109,13 +109,17 @@ let AjTable = function (options) {
         let sortStle = ''
         let sortAttr = ''
         let sortClass = ''
+        let title = ' title="' + item.label + '">'
         if (item.sort) {
           sortIcon = '<span class="xc-sort"><i class="xc-sort-icon asc"></i><i class="xc-sort-icon desc"></i></span>'
           sortStle = 'cursor:pointer;'
           sortAttr = 'sort-key="' + item.key + '"'
           sortClass = item.key === this.option.sortKey ? (this.option.sortType === 'asc' ? 'asc' : 'desc') : ''
         }
-        html += '<th style="' + thStyle + '" title="' + item.label + '">' +
+        if (item.label.includes('<') && item.label.includes('>')) {
+          title = '>'
+        }
+        html += '<th style="' + thStyle + '"' + title +
                     '<div class="xc-th-cell ' + (item.sort ? 'xc-sort-th' : '') + ' ' + sortClass + '" style="' + cellStyle + sortStle + '" ' + sortAttr + '>' +
                     item.label + sortIcon +
                   '</div>'
@@ -229,7 +233,7 @@ let AjTable = function (options) {
       if (col.preImg) {
         img = '<img class="xc-td-text-img ' + col.key + '" src="' + col.preImg + '" />'
       }
-      let inner = '<span title="' + data[col.key] + '" class="xc-td-text ' + col.key + '" style="' + style + '">' + img + icon + data[col.key] + '</span>'
+      let inner = '<span title="' + data[col.key] + '" class="xc-td-text ' + col.key + '" style="' + style + '">' + img + icon + (data[col.key] || '---') + '</span>'
       if (col.isEdit) {
         inner += '<input class="xc-td-text-input ' + col.key + '" type="text" />'
       }
@@ -309,9 +313,12 @@ let AjTable = function (options) {
       } else {
         vm.adjust()
       }
+      window.onresize = function () {
+        vm.$_reset()
+      }
     },
     // 位置和列宽
-    adjust () {
+    adjust (resetFlag) {
       // 表格总宽度是否固定
       if (this.option.fixTableWidth) {
         this.tdTable.css('width', this.getFixTableWidth())
@@ -321,12 +328,14 @@ let AjTable = function (options) {
       this.setMultiSelLeft()
 
       // 固定表头时调整表身位置及表头列宽
-      if (this.option.fixTh) {
+      if (this.option.fixTh && !this.noDataFlag) {
         this.tdBox.css('top', this.thTable.outerHeight())
         this.ajustColWidth()
         // 重复一遍，防止表头列宽调整后，有某列表头文字从多行变为一行使表头高度发生变化
         this.tdBox.css('top', this.thTable.outerHeight())
         this.ajustColWidth()
+      } else if (this.noDataFlag) {
+        this.thTable.width(this.getFixTableWidth())
       }
       // 最右侧一列表头及单元格右边线处理
       this.ajustRightBorder()
@@ -336,6 +345,10 @@ let AjTable = function (options) {
       // 开关初始化
       this.switchInit()
 
+      if (resetFlag) {
+        this.thBox.find('.xc-fix-th').remove()
+        this.tdBox.find('.xc-fix-td').remove()
+      }
       // 固定列和绑定事件
       let vm = this
       setTimeout(function () {
@@ -346,7 +359,7 @@ let AjTable = function (options) {
           vm.fixCol('right')
         }
         vm.bindEvent()
-        if (vm.option.callback.over) {
+        if (vm.option.callback.over && !resetFlag) {
           vm.option.callback.over()
           if (vm.utils.checkNull(window.tableOverFunc) && vm.utils.checkNull(window.tableOverFunc[vm.option.id])) {
             window.tableOverFunc[vm.option.id]()
@@ -386,6 +399,13 @@ let AjTable = function (options) {
         }
         ths.eq(this.colNum - 1).css('border-right', 'none')
         $('.xc-th-cell-scrollbar').css('display', 'none')
+      } else {
+        // debugger
+        for (let j = 1; j <= this.rowNum; j++) {
+          tds.eq(j * this.colNum - 1).css('border-right', '1px solid #ebeef5')
+        }
+        ths.eq(this.colNum - 1).css('border-right', '1px solid #ebeef5')
+        $('.xc-th-cell-scrollbar').css('display', '')
       }
     },
     // 调整表头列宽
@@ -631,7 +651,9 @@ let AjTable = function (options) {
           key: btn.attr('btn-key'),
           data: vm.tdData[index]
         }
-        vm.option.callback.btnClick(obj)
+        if (vm.option.callback.btnClick) {
+          vm.option.callback.btnClick(obj)
+        }
       })
     },
     // 编辑
@@ -763,8 +785,55 @@ let AjTable = function (options) {
     $_setData (tdData) {
       this.init(this.thData, tdData)
     },
+    // 重新调整列宽
     $_reset () {
+      this.adjust(true)
+    },
+    // 添加行
+    $_addRow (dataObj) {
+      let obj = this.utils.deepCopy(dataObj)
+      this.thData.forEach(th => {
+        if (!['no', 'button', 'html'].includes(th.type)) {
+          obj[th.key] = dataObj[th.key] || ''
+        }
+      })
+      this.tdData.push(obj)
+      if (this.tdData.length === 1) {
+        this.init(this.thData, this.tdData)
+      } else {
+        let index = this.tdData.length - 1
+        let html = '<tr row-data=\'' + JSON.stringify(obj) + '\' row-index="' + index + '" class=\'xc-td-row\'>'
+        this.thData.forEach((col, i) => {
+          html += this.createTd(col, index, i)
+        })
+        html += '</tr>'
+        this.tdBody.append(html)
+        this.rowNum++
+      }
       this.adjust()
+    },
+    // 删除行
+    $_deleteRow (index) {
+      this.tdData.splice(index, 1)
+      this.tdBody.find('tr').eq(index).remove()
+      let trs = this.tdBody.find('tr')
+      if (trs.size() === 0) {
+        if (this.option.callback.deleteOver) {
+          this.option.callback.deleteOver()
+        }
+      } else {
+        for (let i = index; i < trs.size(); i++) {
+          let tr = trs.eq(i)
+          tr.attr('row-index', i)
+          tr.find('td').attr('row-index', i)
+          tr.find('.xc-td-btn').attr('row-index', i)
+          tr.find('.xc-chk-box').attr('row-index', i)
+          tr.find('.xc-switch').attr('row-index', i)
+          tr.find('.xc-td-text.num').html(parseInt(i) + 1)
+        }
+        this.rowNum--
+        this.adjust()
+      }
     }
   }
   // 工具方法
