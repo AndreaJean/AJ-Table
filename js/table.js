@@ -233,7 +233,8 @@ let AjTable = function (options) {
       if (col.preImg) {
         img = '<img class="xc-td-text-img ' + col.key + '" src="' + col.preImg + '" />'
       }
-      let inner = '<span title="' + data[col.key] + '" class="xc-td-text ' + col.key + '" style="' + style + '">' + img + icon + (data[col.key] || '---') + '</span>'
+      let title = (data[col.key] || '---').toString().replace(/<\/?[^>]*>/g, ' ') //去除dom标签
+      let inner = '<span title="' + title + '" class="xc-td-text ' + col.key + '" style="' + style + '">' + img + icon + (data[col.key] || '---') + '</span>'
       if (col.isEdit) {
         inner += '<input class="xc-td-text-input ' + col.key + '" type="text" />'
       }
