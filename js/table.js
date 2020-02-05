@@ -141,7 +141,8 @@ let AjTable = function (options) {
     createRow () {
       let html = ''
       this.tdData.forEach((row, index) => {
-        html += '<tr row-data=\'' + JSON.stringify(row) + '\' row-index="' + index + '" class=\'xc-td-row\'>'
+        let forbidSel = this.utils.checkNull(row.forbidSel) ? 'forbid-select' : ''
+        html += '<tr row-data=\'' + JSON.stringify(row) + '\' row-index="' + index + '" class=\'xc-td-row ' + forbidSel + '\'>'
         this.thData.forEach((col, i) => {
           html += this.createTd(col, index, i)
         })
@@ -211,11 +212,11 @@ let AjTable = function (options) {
       return style
     },
     // 添加多选单元格
-    addChkCell (flag, rowIndex) {
+    addChkCell (isThChk, rowIndex) {
       let style = 'left:' + (-this.option.multiSelColWidth) + 'px;' +
                   'width:' + this.option.multiSelColWidth + 'px;'
       let html = '<div style="' + style + '" class="xc-chk-cell">' +
-                    '<span class="xc-chk-box ' + (flag ? 'xc-th-chk' : 'xc-td-chk') + '" row-index="' + (rowIndex || '') + '"></span>' +
+                    '<span class="xc-chk-box ' + (isThChk ? 'xc-th-chk' : 'xc-td-chk') + '" row-index="' + (rowIndex || '') + '"></span>' +
                   '</div>'
       return html
     },
@@ -233,7 +234,7 @@ let AjTable = function (options) {
       if (col.preImg) {
         img = '<img class="xc-td-text-img ' + col.key + '" src="' + col.preImg + '" />'
       }
-      let title = (data[col.key] || '---').toString().replace(/<\/?[^>]*>/g, ' ') //去除dom标签
+      let title = (data[col.key] || '---').toString().replace(/<\/?[^>]*>/g, ' ') // 去除dom标签
       let inner = '<span title="' + title + '" class="xc-td-text ' + col.key + '" style="' + style + '">' + img + icon + (data[col.key] || '---') + '</span>'
       if (col.isEdit) {
         inner += '<input class="xc-td-text-input ' + col.key + '" type="text" />'
@@ -485,7 +486,7 @@ let AjTable = function (options) {
           let rowSpanHeight = rowSpanTd.outerHeight()
           let targetHeight = targetTd.outerHeight()
           if (targetText === rowSpanText) {
-            targetTd.css({'border-bottom-color': 'transparent', 'background': 'none'})
+            targetTd.css({ 'border-bottom-color': 'transparent', 'background': 'none' })
             targetCell.css('display', 'none')
             let h = 0
             let mergeDiv = null
@@ -494,12 +495,12 @@ let AjTable = function (options) {
               h = (mergeDiv.outerHeight() + targetHeight) + 'px'
             } else {
               let html = '<div class="xc-td-merge">' + rowSpanCell.html() + '</div>'
-              rowSpanTd.append(html).css({'border-bottom-color': 'transparent', 'background': 'none'})
+              rowSpanTd.append(html).css({ 'border-bottom-color': 'transparent', 'background': 'none' })
               rowSpanCell.css('display', 'none')
               mergeDiv = rowSpanTd.find('.xc-td-merge')
               h = (rowSpanHeight + targetHeight) + 'px'
             }
-            mergeDiv.css({'height': h, 'line-height': h})
+            mergeDiv.css({ 'height': h, 'line-height': h })
           } else {
             rowSpanRow = row
           }
@@ -554,10 +555,12 @@ let AjTable = function (options) {
     multiSelectEvent () {
       let vm = this
       let thChk = vm.box.find('.xc-chk-box.xc-th-chk')
-      let tdChk = vm.tdTable.find('.xc-td-chk')
-      let tdChkFirst = vm.box.find('.xc-fix-td.first .xc-td-chk')
+      let tdChkAll = vm.box.find('.xc-td-chk')
+      let tdChk = vm.tdTable.find('tr .xc-td-chk').not('tr.forbid-select .xc-td-chk')
+      let tdChkFirst = vm.box.find('.xc-fix-td.first tr .xc-td-chk').not('tr.forbid-select .xc-td-chk')
       let dataRow = vm.tdTable.find('.xc-td-row')
       let dataRowFix = vm.box.find('.xc-fix-td .xc-td-row')
+      tdChkAll.unbind('click')
       thChk.unbind('click').click(function () {
         if (thChk.hasClass('checked')) {
           thChk.removeClass('checked')
@@ -713,9 +716,9 @@ let AjTable = function (options) {
       let ball = target.find('.xc-switch-icon')
       if (flag) {
         let s = target.outerWidth() - ball.outerWidth() - gap
-        ball.animate({left: s + 'px'}, speed, easing)
+        ball.animate({ left: s + 'px' }, speed, easing)
       } else {
-        ball.animate({left: gap + 'px'}, speed, easing)
+        ball.animate({ left: gap + 'px' }, speed, easing)
       }
     },
     // 表身横向滚动监听

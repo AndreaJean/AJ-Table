@@ -284,6 +284,13 @@
   right: 0;
   top: 5px;
 }
+.forbid-select .xc-chk-box {
+  cursor:not-allowed;
+  background: #EAF0F2;
+}
+.forbid-select .xc-chk-box:hover {
+  border-color: #dcdfe6;
+}
 
 /****************************** 开关 ******************************/
 
