@@ -614,9 +614,10 @@ let AjTable = function (options) {
     },
     packData (chk) {
       let data = []
-      for (let i = 0; i < this.rowNum; i++) {
+      for (let i = 0; i < chk.size(); i++) {
         if (chk.eq(i).hasClass('checked')) {
-          data.push(this.tdData[i])
+          let index = chk.eq(i).attr('row-index')
+          data.push(this.tdData[index])
         }
       }
       return data
