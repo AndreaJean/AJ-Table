@@ -213,10 +213,11 @@ let AjTable = function (options) {
     },
     // 添加多选单元格
     addChkCell (isThChk, rowIndex) {
+      console.log(isThChk, rowIndex)
       let style = 'left:' + (-this.option.multiSelColWidth) + 'px;' +
                   'width:' + this.option.multiSelColWidth + 'px;'
       let html = '<div style="' + style + '" class="xc-chk-cell">' +
-                    '<span class="xc-chk-box ' + (isThChk ? 'xc-th-chk' : 'xc-td-chk') + '" row-index="' + (rowIndex || '') + '"></span>' +
+                    '<span class="xc-chk-box ' + (isThChk ? 'xc-th-chk' : 'xc-td-chk') + '" row-index="' + (isThChk ? '' : rowIndex) + '"></span>' +
                   '</div>'
       return html
     },
