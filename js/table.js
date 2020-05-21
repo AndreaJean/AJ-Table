@@ -119,7 +119,7 @@ let AjTable = function (options) {
         if (item.label.includes('<') && item.label.includes('>')) {
           title = '>'
         }
-        html += '<th style="' + thStyle + '"' + title +
+        html += '<th style="' + thStyle + '" col-key="' + item.key + '"' + title +
                     '<div class="xc-th-cell ' + (item.sort ? 'xc-sort-th' : '') + ' ' + sortClass + '" style="' + cellStyle + sortStle + '" ' + sortAttr + '>' +
                     item.label + sortIcon +
                   '</div>'
