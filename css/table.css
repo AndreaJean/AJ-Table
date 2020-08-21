@@ -14,6 +14,7 @@
   box-sizing: border-box;
   border: none;
   text-decoration: inherit;
+  /* table-layout: fixed; */
 }
 .xc-th-head>tr>th {
   position: relative;
@@ -31,8 +32,8 @@
   top: 0;
   height: 100%;
   border-bottom: 1px solid #ebeef5;
-  box-sizing: content-box;
   background: inherit;
+  /* box-sizing: border-box; */
 }
 .xc-th-cell {
   display: block;

@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>双表头</title>
+  <title>单表头</title>
   <link rel="stylesheet" type="text/css" href="css/table.css">
   <link rel="stylesheet" type="text/css" href="http://at.alicdn.com/t/font_822251_bq59zt1o3zh.css">
 </head>
@@ -23,14 +23,11 @@
 </html>
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="data/table.js"></script>
-<script type="text/javascript" src="js/table.js"></script>
+<script type="text/javascript" src="js/table_single.js"></script>
 <script type="text/javascript">
   window.onload = function () {
     let myTable = new AjTable(opt)
-    // myTable.init(thData, [])
-    // myTable.init(thData, tdData)
-    // myTable.init(thDataDouble, [])
-    myTable.init(thDataDouble, tdDataDouble)
+    myTable.init(thData, tdData)
     setTimeout(function () {
       $('.parent2').css('display', 'block')
     }, 10)

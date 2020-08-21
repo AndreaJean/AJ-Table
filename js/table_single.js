@@ -1,3 +1,4 @@
+// 单行表头
 let AjTable = function (options) {
   let newObj = {
     thData: [],
@@ -14,8 +15,6 @@ let AjTable = function (options) {
     rowNum: 0,
     noDataFlag: false,
     option: {},
-    secondThData: [],
-    thColData: [],
     myTableInterval: {},
     init (th, td) {
       let errorMessage = this.checkData(th)
@@ -31,7 +30,7 @@ let AjTable = function (options) {
       }
       this.thData = this.utils.deepCopy(th)
       this.tdData = this.utils.deepCopy(td)
-      this.modifyThData()
+      this.addColKey()
       if (!this.tdData || !this.tdData.length) {
         this.noDataFlag = true
         this.option.fixTh = true
@@ -39,7 +38,7 @@ let AjTable = function (options) {
       this.box = $('#' + this.option.id)
       this.box.find('table').remove()
       this.box.find('.xc-td-box').remove()
-      this.colNum = this.secondThData.length ? this.thColData.length : this.thData.length
+      this.colNum = this.thData.length
       this.rowNum = this.tdData.length
       this.createHtml()
       this.displayListener()
@@ -60,31 +59,18 @@ let AjTable = function (options) {
       return str
     },
     // 为没有key的列设置key
-    modifyThData () {
+    addColKey () {
       let num = 0
-      this.secondThData = []
-      this.thColData = []
       this.thData.forEach(th => {
         if (!this.utils.checkNull(th.key)) {
           th.key = th.type === 'no' ? 'no' : 'col-class-' + num
           num++
         }
-        if (this.utils.checkNull(th.children)) {
-          th.children.forEach(e => {
-            e.key = e.key ? e.key : ('col-class-' + num)
-            num++
-          })
-          this.secondThData.push(...th.children)
-          this.thColData.push(...th.children)
-        } else {
-          this.thColData.push(th)
-        }
       })
-      // console.log(this.secondThData)
     },
     // 生成html
     createHtml () {
-      let htmlTh = '<thead class="xc-th-head">' + this.createThead() + '</thead>'
+      let htmlTh = '<thead class="xc-th-head"><tr>' + this.createTh() + '</tr></thead>'
       let htmlTd = '<tbody class="xc-th-body">' + this.createRow() + '</tbody>'
       let htmlThBox = '<div class="xc-th-box"><table class="xc-th" cellpadding="0" cellspacing="0" border="0">' + htmlTh + '</table></div>'
       let htmlTdBox = '<div class="xc-td-box"><table class="xc-td" cellpadding="0" cellspacing="0" border="0">' + htmlTd + '</table></div>'
@@ -107,7 +93,7 @@ let AjTable = function (options) {
       this.tdBody = this.tdTable.find('tbody')
     },
     // 生成表头
-    createThead () {
+    createTh () {
       let opt = this.option.thStyle
       let thStyle = 'border-color:' + opt.borderColor + ';' +
                   'background-color:' + opt.bgColor + ';' +
@@ -120,53 +106,36 @@ let AjTable = function (options) {
 
       let html = ''
       this.thData.forEach((item, i) => {
-        html += this.createTh(item, i, thStyle, cellStyle, true)
+        let sortIcon = ''
+        let sortStle = ''
+        let sortAttr = ''
+        let sortClass = ''
+        let title = ' title="' + item.label + '">'
+        if (item.sort) {
+          sortIcon = '<span class="xc-sort"><i class="xc-sort-icon asc"></i><i class="xc-sort-icon desc"></i></span>'
+          sortStle = 'cursor:pointer;'
+          sortAttr = 'sort-key="' + item.key + '"'
+          sortClass = item.key === this.option.sortKey ? (this.option.sortType === 'asc' ? 'asc' : 'desc') : ''
+        }
+        if (item.label.includes('<') && item.label.includes('>')) {
+          title = '>'
+        }
+        html += '<th style="' + thStyle + '" col-key="' + item.key + '"' + title +
+                    '<div class="xc-th-cell ' + (item.sort ? 'xc-sort-th' : '') + ' ' + sortClass + '" style="' + cellStyle + sortStle + '" ' + sortAttr + '>' +
+                    item.label + sortIcon +
+                  '</div>'
+        // 添加多选列
+        if (this.option.multiSelect && i === 0) {
+          html += this.addChkCell(true)
+        }
+        // 修补因出现滚动条产生的空白
+        if (i === this.colNum - 1 && this.option.fixTh) {
+          let st = 'width:' + this.option.scrollBarWidth + 'px;' +
+          'right:-' + (this.option.scrollBarWidth + 1) + 'px;'
+          html += '<div class="xc-th-cell-scrollbar" style="' + st + '""></div>'
+        }
+        html += '</th>'
       })
-      if (this.secondThData.length) {
-        html += '</tr><tr>'
-        this.secondThData.forEach((item, i) => {
-          html += this.createTh(item, i, thStyle, cellStyle, false)
-        })
-      }
-      return '<tr>' + html + '</tr>'
-    },
-    // 生成表头单元格
-    createTh (item, index, thStyle, cellStyle, isFirst) {
-      let sortIcon = ''
-      let sortStle = ''
-      let sortAttr = ''
-      let sortClass = ''
-      let title = ' title="' + item.label + '">'
-      if (item.sort) {
-        sortIcon = '<span class="xc-sort"><i class="xc-sort-icon asc"></i><i class="xc-sort-icon desc"></i></span>'
-        sortStle = 'cursor:pointer;'
-        sortAttr = 'sort-key="' + item.key + '"'
-        sortClass = item.key === this.option.sortKey ? (this.option.sortType === 'asc' ? 'asc' : 'desc') : ''
-      }
-      if (item.label.includes('<') && item.label.includes('>')) {
-        title = '>'
-      }
-
-      let mergeType = ''
-      if (this.secondThData.length && isFirst) {
-        mergeType = this.utils.checkNull(item.children) ? (' colspan="' + item.children.length + '"') : (' rowspan="2"')
-      }
-      let html = ''
-      html += '<th' + mergeType + ' class="xc-th-th ' + item.key + '" style="' + thStyle + '" col-key="' + item.key + '"' + title +
-                  '<div class="xc-th-cell ' + item.key + ' ' + (item.sort ? 'xc-sort-th' : '') + ' ' + sortClass + '" style="' + cellStyle + sortStle + '" ' + sortAttr + '>' +
-                  item.label + sortIcon +
-                '</div>'
-      // 添加多选列
-      if (this.option.multiSelect && index === 0 && isFirst) {
-        html += this.addChkCell(true)
-      }
-      // 修补因出现滚动条产生的空白
-      if (index === this.thData.length - 1 && this.option.fixTh) {
-        let st = 'width:' + this.option.scrollBarWidth + 'px;' +
-        'right:-' + this.option.scrollBarWidth + 'px;'
-        html += '<div class="xc-th-cell-scrollbar" style="' + st + '""></div>'
-      }
-      html += '</th>'
       return html
     },
     // 生成数据行
@@ -175,10 +144,8 @@ let AjTable = function (options) {
       this.tdData.forEach((row, index) => {
         let forbidSel = this.utils.checkNull(row.forbidSel) ? 'forbid-select' : ''
         html += '<tr row-data=\'' + JSON.stringify(row) + '\' row-index="' + index + '" class=\'xc-td-row ' + forbidSel + '\'>'
-        let i = 0
-        this.thColData.forEach(col => {
+        this.thData.forEach((col, i) => {
           html += this.createTd(col, index, i)
-          i++
         })
         html += '</tr>'
       })
@@ -247,7 +214,7 @@ let AjTable = function (options) {
     },
     // 添加多选单元格
     addChkCell (isThChk, rowIndex) {
-      // console.log(isThChk, rowIndex)
+      console.log(isThChk, rowIndex)
       let style = 'left:' + (-this.option.multiSelColWidth) + 'px;' +
                   'width:' + this.option.multiSelColWidth + 'px;'
       let html = '<div style="' + style + '" class="xc-chk-cell">' +
@@ -367,17 +334,15 @@ let AjTable = function (options) {
       // 固定表头时调整表身位置及表头列宽
       if (this.option.fixTh && !this.noDataFlag) {
         this.tdBox.css('top', this.thTable.outerHeight())
-        this.secondThData.length ? this.ajustColWidthD() : this.ajustColWidthS()
-        // // 重复一遍，防止表头列宽调整后，有某列表头文字从多行变为一行使表头高度发生变化
+        this.ajustColWidth()
+        // 重复一遍，防止表头列宽调整后，有某列表头文字从多行变为一行使表头高度发生变化
         this.tdBox.css('top', this.thTable.outerHeight())
-        this.secondThData.length ? this.ajustColWidthD() : this.ajustColWidthS()
+        this.ajustColWidth()
       } else if (this.noDataFlag) {
         this.thTable.width(this.getFixTableWidth())
       }
       // 最右侧一列表头及单元格右边线处理
       this.ajustRightBorder()
-      // 处理双表头时最左侧一列表头及单元格右边线
-      this.ajustLeftBorder()
 
       // 合并单元格
       if (!resetFlag) {
@@ -429,117 +394,71 @@ let AjTable = function (options) {
         this.thTableLeft = this.option.multiSelColWidth
       }
     },
-    // 双表头调整表头列宽
-    ajustColWidthD () {
-      let tds = this.tdTable.find('td')
-      let tableW = this.getFixTableWidth()
-
-      if (this.noDataFlag) {
-        this.thColData.forEach((col, i) => {
-          let width = col.width || ''
-          if (width.indexOf('%') !== -1) {
-            width = tableW * parseInt(col.width) / 100 + 'px'
-          }
-          this.thHead.find('.xc-th-cell.' + col.key).width(width)
-        })
-        if (this.thTable.outerWidth() < tableW) {
-          this.thTable.width(tableW)
-        }
-      } else {
-        this.thColData.forEach((col, i) => {
-          let flag = this.emptyDataCol(i)
-          if (flag) {
-            let w1 = tds.eq(i).find('.xc-td-cell').outerWidth()
-            let w2 = this.thHead.find('.xc-th-th.' + col.key).outerWidth()
-            let w = w1
-            if (!this.utils.checkNull(col.width) && col.type !== 'button') {
-              w = w2 > w1 ? w2 : w1
-              col.width = w
-            }
-            this.thHead.find('.xc-th-cell.' + col.key).css('width', w + 'px')
-          } else {
-            let thw = this.thHead.find('.xc-th-th.' + col.key).width()
-            thw = thw > 72 ? thw : 72
-            tds.eq(i).find('.xc-td-cell').css('width', thw + 'px')
-            tds.eq(i).css('width', thw + 'px')
-            this.thHead.find('.xc-th-cell.' + col.key).css('width', thw + 'px')
-            this.thHead.find('.xc-th-th.' + col.key).css('width', thw + 'px')
-          }
-        })
-        this.thTable.width(this.tdTable.width())
-      }
-    },
-    // 单表头调整表头列宽
-    ajustColWidthS () {
-      let tds = this.tdTable.find('td')
-      let tableW = this.getFixTableWidth()
-
-      if (this.noDataFlag) {
-        this.thColData.forEach((col, i) => {
-          let width = col.width || ''
-          if (width.indexOf('%') !== -1) {
-            width = tableW * parseInt(col.width) / 100 + 'px'
-          }
-          this.thHead.find('.xc-th-cell.' + col.key).width(width)
-        })
-        if (this.thTable.outerWidth() < tableW) {
-          this.thTable.width(tableW)
-        }
-      } else {
-        this.thColData.forEach((col, i) => {
-          let flag = this.emptyDataCol(i)
-          if (flag) {
-            let w1 = tds.eq(i).find('.xc-td-cell').outerWidth()
-            let w2 = this.thHead.find('.xc-th-th.' + col.key).outerWidth()
-            let w = w1
-            if (!this.utils.checkNull(col.width) && col.type !== 'button') {
-              w = w2 > w1 ? w2 : w1
-              tds.eq(i).find('.xc-td-cell').css('width', w + 'px')
-              tds.eq(i).css('width', w + 'px')
-              col.width = w + 'px'
-            }
-            this.thHead.find('.xc-th-th.' + col.key).css('width', w + 'px')
-            this.thHead.find('.xc-th-cell.' + col.key).css('width', w + 'px')
-          } else {
-            let thw = this.thHead.find('.xc-th-th.' + col.key).outerWidth()
-            tds.eq(i).find('.xc-td-cell').css('width', thw + 'px')
-            tds.eq(i).css('width', thw + 'px')
-            this.thHead.find('.xc-th-cell.' + col.key).css('width', thw + 'px')
-            col.width = thw + 'px'
-          }
-        })
-        this.thTable.width(this.tdTable.width())
-      }
-    },
     // 最右侧一列表头及单元格右边线处理
     ajustRightBorder () {
+      let ths = this.thHead.find('th')
       let tds = this.tdTable.find('td')
+      // console.log(this.tdTable.height(), this.tdBox.height())
       if (this.tdTable.height() <= this.tdBox.height()) {
         for (let j = 1; j <= this.rowNum; j++) {
           tds.eq(j * this.colNum - 1).css('border-right', 'none')
         }
-        this.thHead.find('.xc-th-th.' + this.thData[this.thData.length - 1].key).css('border-right', 'none')
-        this.thHead.find('.xc-th-th.' + this.thColData[this.colNum - 1].key).css('border-right', 'none')
+        ths.eq(this.colNum - 1).css('border-right', 'none')
         $('.xc-th-cell-scrollbar').css('display', 'none')
       } else {
-        // for (let j = 1; j <= this.rowNum; j++) {
-        //   tds.eq(j * this.colNum - 1).css('border-right', '1px solid #ebeef5')
-        // }
-        // this.thHead.find('.xc-th-th.' + this.thData[this.thData.length - 1].key).css('border-right', '1px solid #ebeef5')
-        // this.thHead.find('.xc-th-th.' + this.thColData[this.colNum - 1].key).css('border-right', '1px solid #ebeef5')
-        $('.xc-th-cell-scrollbar').height(this.thHead.height())
+        // debugger
+        for (let j = 1; j <= this.rowNum; j++) {
+          tds.eq(j * this.colNum - 1).css('border-right', '1px solid #ebeef5')
+        }
+        ths.eq(this.colNum - 1).css('border-right', '1px solid #ebeef5')
+        $('.xc-th-cell-scrollbar').css('display', '')
       }
     },
-    // 处理双表头时最左侧一列表头及单元格右边线
-    ajustLeftBorder () {
-      if (this.secondThData.length) {
-        $('.xc-th-th .xc-chk-cell').height(this.thHead.height())
-        // this.thHead.find('.xc-th-th.' + this.secondThData[0].key).css('border-left', '1px solid #ebeef5')
+    // 调整表头列宽
+    ajustColWidth () {
+      let ths = this.thHead.find('th')
+      let tds = this.tdTable.find('td')
+      let tableW = this.getFixTableWidth()
+
+      if (this.noDataFlag) {
+        this.thData.forEach((col, i) => {
+          let width = col.width || ''
+          if (width.indexOf('%') !== -1) {
+            width = tableW * parseInt(col.width) / 100 + 'px'
+          }
+          ths.eq(i).find('.xc-th-cell').width(width)
+        })
+        if (this.thTable.outerWidth() < tableW) {
+          this.thTable.width(tableW)
+        }
+      } else {
+        for (let i = 0; i < this.colNum; i++) {
+          let flag = this.emptyDataCol(i)
+          if (flag) {
+            let w1 = tds.eq(i).find('.xc-td-cell').outerWidth()
+            let w2 = ths.eq(i).outerWidth()
+            let w = w1
+            if (!this.utils.checkNull(this.thData[i].width) && this.thData[i].type !== 'button') {
+              w = w2 > w1 ? w2 : w1
+              tds.eq(i).find('.xc-td-cell').css('width', w + 'px')
+              tds.eq(i).css('width', w + 'px')
+              this.thData[i].width = w + 'px'
+            }
+            ths.eq(i).find('.xc-th-cell').css('width', w + 'px')
+          } else {
+            let thw = ths.eq(i).outerWidth()
+            tds.eq(i).find('.xc-td-cell').css('width', thw + 'px')
+            tds.eq(i).css('width', thw + 'px')
+            ths.eq(i).find('.xc-th-cell').css('width', thw + 'px')
+            this.thData[i].width = thw + 'px'
+          }
+        }
+        this.thTable.width(this.tdTable.width())
       }
     },
     // 判断列宽未设置且该列无数据
     emptyDataCol (index) {
-      let th = this.thColData[index]
+      let th = this.thData[index]
       let colStr = th.key
       let type = th.type
       if (type !== 'text') {
@@ -557,7 +476,7 @@ let AjTable = function (options) {
     // 合并单元格
     mergeCell () {
       for (let col = 0; col < this.colNum; col++) {
-        if (!this.thColData[col].mergeCell) {
+        if (!this.thData[col].mergeCell) {
           continue
         }
         let rowSpanRow = 0
@@ -763,7 +682,7 @@ let AjTable = function (options) {
           nv.css('display', 'none')
           let obj = {
             editKey: cell.attr('col-key'),
-            oldData: vm.thColData[index],
+            oldData: vm.thData[index],
             newValue: nv.val()
           }
           vm.option.callback.editOver(obj)
@@ -882,18 +801,18 @@ let AjTable = function (options) {
     // 添加行
     $_addRow (dataObj) {
       let obj = this.utils.deepCopy(dataObj)
-      this.thColData.forEach(th => {
+      this.thData.forEach(th => {
         if (!['no', 'button', 'html'].includes(th.type)) {
           obj[th.key] = dataObj[th.key] || ''
         }
       })
       this.tdData.push(obj)
       if (this.tdData.length === 1) {
-        this.init(this.thColData, this.tdData)
+        this.init(this.thData, this.tdData)
       } else {
         let index = this.tdData.length - 1
         let html = '<tr row-data=\'' + JSON.stringify(obj) + '\' row-index="' + index + '" class=\'xc-td-row\'>'
-        this.thColData.forEach((col, i) => {
+        this.thData.forEach((col, i) => {
           html += this.createTd(col, index, i)
         })
         html += '</tr>'
