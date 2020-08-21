@@ -150,5 +150,10 @@ var tdData = [
 
 #### 方法
 
-- **$_reset**
-
+| 方法名 | 说明 | 参数 |
+| --- | --- | --- |
+|$_reset|重新调整列宽|---|
+|$_setData|加载表格数据|tdData：{Array}，参见tdData|
+|$_reviewMultiSelect|设置行选中|indexList：{Array}，选中行的index（从0记数）数组|
+|$_addRow|添加行|dataObj：{Object}，格式参见tdData元素|
+|$_deleteRow|删除行|index：{Number}，目标行index（从0记数）|
