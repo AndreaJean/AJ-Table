@@ -146,7 +146,7 @@ var tdData = [
   {name: '李四', age: '',  sex: '男', marriage: '2', forbidSel : true},
 ]
 ```
-- forbidSel：{Boolean}，是否禁止选中该行
+- forbidSel：{Boolean}，值为true时禁止选中该行
 
 #### 方法
 
