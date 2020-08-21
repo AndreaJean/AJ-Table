@@ -840,7 +840,7 @@ let AjTable = function (options) {
     //
     // 外部调用方法=======================================================================
     //
-    // 回显多选
+    // 设置行选中
     $_reviewMultiSelect (indexList) {
       let thChk = this.box.find('.xc-chk-box.xc-th-chk')
       let tdChk = this.tdTable.find('.xc-td-chk')

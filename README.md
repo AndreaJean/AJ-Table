@@ -151,3 +151,8 @@ var tdData = [
 ]
 ```
 - forbidSel：{Boolean}，是否禁止选中该行
+
+#### 方法
+
+##### $_reset
+
