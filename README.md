@@ -127,8 +127,8 @@ var thData = [
 - key：{String}，该列唯一标识，该列td的col-key属性值，会加入该列内容的class中
 - label：{String}，表头文字
 - type：{String}，内容数据格式，'no'序号，'text'文字，'img'图片，'switch'开关，'button'按钮，'html'自定义HTML片断，'merge'多级表头的一级表头
-- width：{String}，列宽，可输入"70px"或"20%"
-- align：{String}，内容对齐方式（不包含表头文字的对齐方式）
+- width：{String}，列宽，可输入"70px"或"20%"（**当type为'merge'时无效**）
+- align：{String}，内容对齐方式（**当type为'merge'时无效，不包含表头文字的对齐方式**）
 - color：{String}，设置该列内容文字颜色（仅当type为'text'时有效）
 - sort：{Boolean}，值为true设置该列可排序（仅当type为'text'时有效）
 - isBreak：{Boolean}，值为true设置该列文字内容自动折行
