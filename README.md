@@ -127,19 +127,19 @@ var thData = [
 - key：{String}，该列唯一标识，该列td的col-key属性值，会加入该列内容的class中
 - label：{String}，表头文字
 - type：{String}，内容数据格式，'no'序号，'text'文字，'img'图片，'switch'开关，'button'按钮，'html'自定义HTML片断，'merge'多级表头的一级表头
-- width：{String}，列宽，可输入"70px"或"20%"`当type为'merge'时无效`
-- align：{String}，内容对齐方式`当type为'merge'时无效，不包含表头文字的对齐方式`
-- color：{String}，设置该列内容文字颜色`仅当type为'text'时有效`
-- sort：{Boolean}，值为true设置该列可排序`仅当type为'text'时有效`
+- width：{String}，列宽，可输入"70px"或"20%"（**当type为'merge'时无效**）
+- align：{String}，内容对齐方式（**当type为'merge'时无效，不包含表头文字的对齐方式**）
+- color：{String}，设置该列内容文字颜色（**仅当type为'text'时有效**）
+- sort：{Boolean}，值为true设置该列可排序（**仅当type为'text'时有效**）
 - isBreak：{Boolean}，值为true设置该列文字内容自动折行
 - mergeCell：{Boolean}，值为true设置该列合并相邻等值单元格
-- isEdit：{Boolean}，值为true设置该列文字内容可双击修改`仅当type='text'，sort=false，mergeCell=false时有效`
-- preIcon, preImg：{String}，置于文字前的图标、图片`仅当type为'text'时有效`
-- imgW，imgH：{String}，图片宽、高，格式为"数值+单位"，如"20px"`仅当type为'img'时有效`
-- trueVal, trueLabel, falseVal, falseLabel：{String}，开关的开启值、开启文字、关闭值、关闭文字`仅当type为'switch'时有效`
-- btns：{Array}，按钮设置`仅当type为'button'时有效`，示例"[{key: '按钮唯一标识（不可为空）', label: '按钮文字', iconClass: '按钮文字前的icon的类名（可为空）'}]"
-- htmlCode：{String}，HTML片断`仅当type为'html'时有效`
-- children：{Array}，多级表头时存放二级表头`仅当type为'merge'时有效`
+- isEdit：{Boolean}，值为true设置该列文字内容可双击修改（**仅当type='text'，sort=false，mergeCell=false时有效**）
+- preIcon, preImg：{String}，置于文字前的图标、图片（**仅当type为'text'时有效**）
+- imgW，imgH：{String}，图片宽、高，格式为"数值+单位"，如"20px"（**仅当type为'img'时有效**）
+- trueVal, trueLabel, falseVal, falseLabel：{String}，开关的开启值、开启文字、关闭值、关闭文字（**仅当type为'switch'时有效**）
+- btns：{Array}，按钮设置（**仅当type为'button'时有效**），示例"[{key: '按钮唯一标识（不可为空）', label: '按钮文字', iconClass: '按钮文字前的icon的类名（可为空）'}]"
+- htmlCode：{String}，HTML片断（**仅当type为'html'时有效**）
+- children：{Array}，多级表头时存放二级表头（**仅当type为'merge'时有效**）
 
 #### 表格数据tdData
 
