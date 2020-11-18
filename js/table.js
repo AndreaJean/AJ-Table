@@ -65,6 +65,9 @@ let AjTable = function (options) {
       this.secondThData = []
       this.thColData = []
       this.thData.forEach(th => {
+        if (th.isShow === false) {
+          return
+        }
         if (!this.utils.checkNull(th.key)) {
           th.key = th.type === 'no' ? 'no' : 'col-class-' + num
           num++
@@ -163,7 +166,7 @@ let AjTable = function (options) {
       // 修补因出现滚动条产生的空白
       if (index === this.thData.length - 1 && this.option.fixTh) {
         let st = 'width:' + this.option.scrollBarWidth + 'px;' +
-        'right:-' + this.option.scrollBarWidth + 'px;'
+        'right:-' + (this.option.scrollBarWidth + 1) + 'px;'
         html += '<div class="xc-th-cell-scrollbar" style="' + st + '""></div>'
       }
       html += '</th>'
@@ -173,7 +176,7 @@ let AjTable = function (options) {
     createRow () {
       let html = ''
       this.tdData.forEach((row, index) => {
-        let forbidSel = this.utils.checkNull(row.forbidSel) ? 'forbid-select' : ''
+        let forbidSel = row.forbidSel ? 'forbid-select' : ''
         html += '<tr row-data=\'' + JSON.stringify(row) + '\' row-index="' + index + '" class=\'xc-td-row ' + forbidSel + '\'>'
         let i = 0
         this.thColData.forEach(col => {
@@ -212,7 +215,7 @@ let AjTable = function (options) {
         inner = this.addSwitch(col, data, rowIndex)
         break
       case 'button':
-        inner = this.addBtns(col, rowIndex)
+        inner = this.addBtns(col, rowIndex, data)
         break
       case 'html':
         inner = data.htmlCode || col.htmlCode
@@ -261,7 +264,7 @@ let AjTable = function (options) {
       let icon = ''
       let img = ''
       if (col.isBreak) {
-        style += 'word-wrap:break-word;white-space:unset;'
+        style += 'word-wrap:break-word;white-space:pre-line;'
       }
       if (col.preIcon) {
         icon = '<i class="icon iconfont ' + col.preIcon + '"></i>'
@@ -299,11 +302,12 @@ let AjTable = function (options) {
       return inner
     },
     // 添加按钮
-    addBtns (col, rowIndex) {
+    addBtns (col, rowIndex, data) {
       let inner = ''
       col.btns.forEach(btn => {
         let attr = 'btn-key="' + btn.key + '" row-index="' + rowIndex + '"'
-        inner += '<button ' + attr + ' class="xc-td-btn ' + col.key + ' ' + btn.key + '">' +
+        let className = 'class="xc-td-btn ' + (data.forbidBtn && data.forbidBtn.includes(btn.key) ? ' forbid ' : '') + col.key + ' ' + btn.key + '"'
+        inner += '<button ' + attr + className + '>' +
                     '<i class="xc-td-btn-icon ' + btn.iconClass + '"></i>' +
                     btn.label +
                   '</button>'
@@ -368,7 +372,10 @@ let AjTable = function (options) {
       if (this.option.fixTh && !this.noDataFlag) {
         this.tdBox.css('top', this.thTable.outerHeight())
         this.secondThData.length ? this.ajustColWidthD() : this.ajustColWidthS()
-        // // 重复一遍，防止表头列宽调整后，有某列表头文字从多行变为一行使表头高度发生变化
+        // 重复一遍，防止表头列宽调整后，有某列表头文字从多行变为一行使表头高度发生变化
+        if (this.option.fixTableWidth) {
+          this.tdTable.css('width', this.getFixTableWidth())
+        }
         this.tdBox.css('top', this.thTable.outerHeight())
         this.secondThData.length ? this.ajustColWidthD() : this.ajustColWidthS()
       } else if (this.noDataFlag) {
@@ -733,7 +740,7 @@ let AjTable = function (options) {
     // 按钮点击事件
     btnClickEvent () {
       let vm = this
-      let target = vm.tdBox.find('.xc-td-btn')
+      let target = vm.tdBox.find('.xc-td-btn').not('.xc-td-btn.forbid')
       target.unbind('click').click(function () {
         let btn = $(this)
         let index = btn.attr('row-index')

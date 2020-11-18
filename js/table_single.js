@@ -228,7 +228,7 @@ let AjTable = function (options) {
       let icon = ''
       let img = ''
       if (col.isBreak) {
-        style += 'word-wrap:break-word;white-space:unset;'
+        style += 'word-wrap:break-word;white-space:pre-line;'
       }
       if (col.preIcon) {
         icon = '<i class="icon iconfont ' + col.preIcon + '"></i>'

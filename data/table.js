@@ -15,7 +15,7 @@ let thDataDouble = [
       { key: 'detail', label: '详细', type: 'text', width: '', color: '', align: 'center' }
     ]
   },
-  { key: 'name', label: '姓名', type: 'text', color: 'red', align: 'left', sort: true, isBreak: false, preImg: 'https://wwc.alicdn.com/avatar/getAvatar.do?userNick=&width=50&height=50&type=sns&_input_charset=UTF-8' },
+  { key: 'name', label: '姓名', type: 'text', color: 'red', align: 'left', sort: true, isBreak: true, preImg: 'https://wwc.alicdn.com/avatar/getAvatar.do?userNick=&width=50&height=50&type=sns&_input_charset=UTF-8' },
   { key: 'age', label: '年龄', type: 'text', color: '', align: 'left', isEdit: true, sort: true },
   { key: 'nationality', label: '国籍', type: 'text', color: '', align: 'left', preIcon: 'icon-new-xinwen-copy' },
   { key: 'marriage', label: '婚否', type: 'switch', align: 'center', trueVal: '1', trueLabel: '已婚', falseVal: '2', falseLabel: '未婚' },
@@ -46,7 +46,7 @@ let thData = [
   { key: 'nationality', label: '国籍', type: 'text', width: '100px', color: '', align: 'left', preIcon: 'icon-new-xinwen-copy' },
   { key: 'marriage', label: '婚否', type: 'switch', width: '100px', align: 'center', trueVal: '1', trueLabel: '已婚', falseVal: '2', falseLabel: '未婚' },
   { key: 'sex', label: '性别性别', type: 'text', width: '', color: '', align: 'center', mergeCell: true },
-  { key: 'photo', label: '照片', type: 'img', width: '', align: 'center', imgW: '', imgH: '80px' },
+  { key: 'photo', isShow: false, label: '照片', type: 'img', width: '', align: 'center', imgW: '', imgH: '80px' },
   { label: '标签', type: 'html', width: '220px', align: 'left', htmlCode: '<h2>自定义HTML片断</h2>' },
   { label: '操作', type: 'button', width: '300px', align: 'center', btns: testBtn }
 ]
@@ -59,18 +59,19 @@ let tdData = [
   { name: '成吉思汗', age: '95', nationality: '蒙古', sex: '男', marriage: '1', photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039645_Qy82.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
   { forbidSel: true, name: '张三', age: '', nationality: '', sex: '男', marriage: '1', photo: 'https://pic.xiami.net/images/artistlogo/60/13751627012360.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
   { name: '李四', age: '', nationality: '', sex: '男', marriage: '1', photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039605_405E.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
-  { name: '王五', age: '', nationality: '', sex: '女', marriage: '2', photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039645_Qy82.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' }
+  { name: '王五', age: '', nationality: '', sex: '女', marriage: '2', forbidBtn: ['donwload'], photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039645_Qy82.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' }
 ]
 // 可输入示例
-// let thData = [
-//   {key: 'num', label: '序号', type: 'no', width: '', color: '', align: 'center'},
-//   {key: 'name', label: 'aaa', type: 'text', width: '', color: '', align: 'center'},
-//   {label: 'aaa', type: 'html', width: '', align: 'left', htmlCode: '<input type=\'text\' />'},
-//   {label: 'bbb', type: 'html', width: '', align: 'left', htmlCode: '<input type=\'text\' />'},
-//   {label: 'ccc', type: 'html', width: '', align: 'left', htmlCode: '<input type=\'text\' />'},
-//   {label: '<span class="ddd">+</span>', type: 'button', width: '', align: 'left', btns: [{key: 'delete', label: '删除', iconClass: 'iconfont icon-shanchu'}]}
-// ]
-// let tdData = [{name: '唐僧'}, {name: '观音'}, {name: '超人'}]
+let thData1 = [
+  {key: 'num', label: '序号', type: 'no', width: '', color: '', align: 'center'},
+  {key: 'name', label: 'aaa', type: 'text', width: '', color: '', align: 'center'},
+  {label: 'aaa', type: 'html', width: '', align: 'left', htmlCode: '<input type=\'text\' />'},
+  {label: 'bbb', type: 'html', width: '', align: 'left', htmlCode: '<input type=\'text\' />'},
+  {label: 'ccc', type: 'html', width: '', align: 'left', htmlCode: '<input type=\'text\' />'},
+  {label: '<span class="ddd">+</span>', type: 'button', width: '', align: 'left', btns: [{key: 'delete', label: '删除', iconClass: 'iconfont icon-shanchu'}]}
+]
+let tdData1 = [{name: '唐僧'}, {name: '观音'}, {name: '超人'}]
+
 let opt = {
   id: 'tableDemo',
   fixTableWidth: true,

@@ -98,6 +98,11 @@ myTable.init(thData, tdData) //生成表格
 
 结构为对象数组，示例：
 ```JavaScript
+var testBtn = [
+  { key: 'donwload', label: '下载', iconClass: 'iconfont icon-download' },
+  { key: 'edit', label: '编辑', iconClass: 'iconfont icon-xiugai1' },
+  { key: 'delete', label: '删除', iconClass: 'iconfont icon-shanchu' }
+]
 var thData = [
   { key: 'num', label: '序号', type: 'no', width: '100px', color: '', align: 'center' },
   { key: 'name', label: '姓名', type: 'text', width: '100px', color: 'red', align: 'left', sort: true, isBreak: false, preImg: 'https://wwc.alicdn.com/avatar/getAvatar.do?userNick=&width=50&height=50&type=sns&_input_charset=UTF-8' },

@@ -32,8 +32,9 @@
   top: 0;
   height: 100%;
   border-bottom: 1px solid #ebeef5;
+  border-left: 1px solid #ebeef5;
+  box-sizing: content-box;
   background: inherit;
-  /* box-sizing: border-box; */
 }
 .xc-th-cell {
   display: block;
@@ -165,6 +166,12 @@
 .xc-td-btn:hover {
   border: 1px solid #409eff;
   color: #409eff;
+}
+.xc-td-btn.forbid {
+  cursor: not-allowed;
+  border: 1px solid #d3d4d6;
+  color: #909399;
+  background: #f4f4f5;
 }
 .xc-td-btn-icon {
   margin-right: 2px;

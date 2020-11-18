@@ -28,9 +28,9 @@
   window.onload = function () {
     let myTable = new AjTable(opt)
     // myTable.init(thData, [])
-    // myTable.init(thData, tdData)
+    myTable.init(thData, tdData)
     // myTable.init(thDataDouble, [])
-    myTable.init(thDataDouble, tdDataDouble)
+    // myTable.init(thDataDouble, tdDataDouble)
     setTimeout(function () {
       $('.parent2').css('display', 'block')
     }, 10)
@@ -79,17 +79,31 @@
   }
 
   .main {
-    position: relative;
-    width: 1400px;
-    height: 500px;
+    position: absolute;
+    width: auto;
+    height: auto;
+    left: 200px;
+    top: 100px;
+    right: 900px;
+    bottom: 400px;
     /* margin: 40px auto; */
-    border: 1px solid #ebeef5;
+    /* border: 1px solid #ebeef5; */
     font-size: 14px;
     color: #333;
     overflow: hidden;
     font-weight: normal;
     /* text-decoration: underline; */
   }
+  /* .main {
+    position: relative;
+    width: 1400px;
+    height: 500px;
+    border: 1px solid #ebeef5;
+    font-size: 14px;
+    color: #333;
+    overflow: hidden;
+    font-weight: normal;
+  } */
   .test{
     position: absolute;
     top:650px;
