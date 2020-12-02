@@ -35,31 +35,43 @@ let tdDataDouble = [
 
 // 普通示例
 let testBtn = [
-  { key: 'donwload', label: '下载', iconClass: 'iconfont icon-download' },
+  { key: 'donwload', type: 'link', label: '下载', iconClass: 'iconfont icon-download' },
   { key: 'edit', label: '编辑', iconClass: 'iconfont icon-xiugai1' },
   { key: 'delete', label: '删除', iconClass: 'iconfont icon-shanchu' }
+]
+const opts = [
+  {label: '中国', value: '中国', selected: true},
+  {label: '美国', value: '美国', selected: false, disable: true},
+  {label: '日本', value: '日本', selected: false},
+  {label: '英国', value: '英国', selected: false, disable: true},
+  {label: '意大利', value: '意大利', selected: false},
+  {label: '法国', value: '法国', selected: false},
+  {label: '西班牙', value: '西班牙', selected: false},
+  {label: '巴西', value: '巴西', selected: false},
+  {label: '德国', value: '德国', selected: false}
 ]
 let thData = [
   { key: 'num', label: '序号', type: 'no', width: '100px', color: '', align: 'center' },
   { key: 'name', label: '姓名', type: 'text', width: '100px', color: 'red', align: 'left', sort: true, isBreak: false, preImg: 'https://wwc.alicdn.com/avatar/getAvatar.do?userNick=&width=50&height=50&type=sns&_input_charset=UTF-8' },
-  { key: 'age', label: '年龄', type: 'text', width: '100px', color: '', align: 'left', isEdit: true, sort: true },
-  { key: 'nationality', label: '国籍', type: 'text', width: '100px', color: '', align: 'left', preIcon: 'icon-new-xinwen-copy' },
+  { key: 'age', label: '年龄', type: 'text', width: '100px', color: '', align: 'left', preIcon: 'icon-new-xinwen-copy', isEdit: true, sort: true },
+  { key: 'nationality', label: '国籍', type: 'select', options: opts, selectWidth: '100px', preText: '选择', defaultVal: '', isMultiple: false, showClear: true, showTree: false, placeholder: '国籍' },
   { key: 'marriage', label: '婚否', type: 'switch', width: '100px', align: 'center', trueVal: '1', trueLabel: '已婚', falseVal: '2', falseLabel: '未婚' },
   { key: 'sex', label: '性别性别', type: 'text', width: '', color: '', align: 'center', mergeCell: true },
   { key: 'photo', isShow: false, label: '照片', type: 'img', width: '', align: 'center', imgW: '', imgH: '80px' },
-  { label: '标签', type: 'html', width: '220px', align: 'left', htmlCode: '<h2>自定义HTML片断</h2>' },
+  { key: 'count', label: '统计', type: 'input', inputType: 'text', inputWidth: '30px', defaultVal: '0', preText: '共', nextText: '条', placeholder: '请输入中文' },
+  // { label: '标签', type: 'html', width: '220px', align: 'left', htmlCode: '<h2>自定义HTML片断</h2>' },
   { label: '操作', type: 'button', width: '300px', align: 'center', btns: testBtn }
 ]
 let tdData = [
-  { forbidSel: true, name: '唐僧', age: '', nationality: '大唐', sex: '女', marriage: '1', photo: 'https://pic.xiami.net/images/artistlogo/60/13751627012360.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
-  { name: '孙悟空孙悟空孙悟空孙悟空', age: '', nationality: '花果山', sex: '男', marriage: '2', photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039605_405E.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
-  { forbidSel: true, name: '观音', age: '54', nationality: '西天', sex: '女', marriage: '1', photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039645_Qy82.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
-  { name: '钢铁侠', age: '51', nationality: '美国', sex: '女', marriage: '2', photo: 'https://pic.xiami.net/images/artistlogo/60/13751627012360.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
-  { name: '超人', age: '42', nationality: '美国', sex: '男', marriage: '2', photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039605_405E.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
-  { name: '成吉思汗', age: '95', nationality: '蒙古', sex: '男', marriage: '1', photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039645_Qy82.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
-  { forbidSel: true, name: '张三', age: '', nationality: '', sex: '男', marriage: '1', photo: 'https://pic.xiami.net/images/artistlogo/60/13751627012360.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
-  { name: '李四', age: '', nationality: '', sex: '男', marriage: '1', photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039605_405E.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
-  { name: '王五', age: '', nationality: '', sex: '女', marriage: '2', forbidBtn: ['donwload'], photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039645_Qy82.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' }
+  { forbidSel: true, name: '刘翔', age: '', nationality: '中国', sex: '女', count: '3', marriage: '1', forbidBtn: ['donwload', 'edit'], photo: 'https://pic.xiami.net/images/artistlogo/60/13751627012360.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
+  { name: '李娜李娜李娜李娜李娜李娜李娜', age: '', nationality: '中国', sex: '男', count: '35', marriage: '2', photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039605_405E.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
+  { forbidSel: true, name: '贝克汉姆', age: '54', nationality: '英国', sex: '女', count: '22', marriage: '1', photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039645_Qy82.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
+  { name: '厄齐尔', age: '51', nationality: '德国', sex: '女', count: '14', marriage: '2', photo: 'https://pic.xiami.net/images/artistlogo/60/13751627012360.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
+  { name: '本泽马', age: '42', nationality: '法国', sex: '男', count: '17', marriage: '2', photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039605_405E.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
+  { name: '雷东多', age: '95', nationality: '', sex: '男', marriage: '1', photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039645_Qy82.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
+  { forbidSel: true, name: '卡卡', age: '', nationality: '巴西', sex: '男', marriage: '1', photo: 'https://pic.xiami.net/images/artistlogo/60/13751627012360.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
+  { name: '因扎吉', age: '', nationality: '意大利', sex: '男', marriage: '1', photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039605_405E.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
+  { name: '劳尔', age: '', nationality: '西班牙', sex: '女', marriage: '2', forbidBtn: ['donwload'], photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039645_Qy82.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' }
 ]
 // 可输入示例
 let thData1 = [
@@ -129,6 +141,9 @@ let opt = {
     },
     switchOver: function (data) {
       console.log(data)
+    },
+    selectOver: function (data) {
+      console.log('selectOver', data)
     },
     over: function (data) {
       console.log('表格加载完毕')

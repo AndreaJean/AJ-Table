@@ -16,6 +16,8 @@ let AjTable = function (options) {
     option: {},
     secondThData: [],
     thColData: [],
+    selectCols: [],
+    selectData: {}, // 存储下拉选列的下拉框对象
     myTableInterval: {},
     init (th, td) {
       let errorMessage = this.checkData(th)
@@ -23,6 +25,7 @@ let AjTable = function (options) {
         alert(errorMessage)
         return
       }
+      this.selectData = {}
       this.option = this.utils.mergeObjectDeep(this.Opt, options)
       this.option.scrollBarWidth = this.utils.getScrollWidth()
       if (this.option.fixFirstCol || this.option.fixLastCol) {
@@ -39,7 +42,8 @@ let AjTable = function (options) {
       this.box = $('#' + this.option.id)
       this.box.find('table').remove()
       this.box.find('.xc-td-box').remove()
-      this.colNum = this.secondThData.length ? this.thColData.length : this.thData.length
+      // this.colNum = this.secondThData.length ? this.thColData.length : this.thData.length
+      this.colNum = this.thColData.length
       this.rowNum = this.tdData.length
       this.createHtml()
       this.displayListener()
@@ -73,14 +77,27 @@ let AjTable = function (options) {
           num++
         }
         if (this.utils.checkNull(th.children)) {
+          let invisibleChildrenNum = 0
           th.children.forEach(e => {
+            if (e.isShow === false) {
+              invisibleChildrenNum++
+              return
+            }
             e.key = e.key ? e.key : ('col-class-' + num)
             num++
+            this.secondThData.push(e)
+            this.thColData.push(e)
           })
-          this.secondThData.push(...th.children)
-          this.thColData.push(...th.children)
+          if (invisibleChildrenNum === th.children.length) {
+            th.isShow = false
+          }
+          // this.secondThData.push(...th.children)
+          // this.thColData.push(...th.children)
         } else {
           this.thColData.push(th)
+        }
+        if (th.type === 'select') {
+          this.selectCols.push(th)
         }
       })
       // console.log(this.secondThData)
@@ -108,6 +125,11 @@ let AjTable = function (options) {
       this.thHead = this.box.find('.xc-th-head')
       this.tdTable = this.tdBox.children('.xc-td')
       this.tdBody = this.tdTable.find('tbody')
+      this.tdData.forEach((row, index) => {
+        this.selectCols.forEach(col => {
+          this.addSelect(col, row, index)
+        })
+      })
     },
     // 生成表头
     createThead () {
@@ -123,6 +145,9 @@ let AjTable = function (options) {
 
       let html = ''
       this.thData.forEach((item, i) => {
+        if (item.isShow === false) {
+          return
+        }
         html += this.createTh(item, i, thStyle, cellStyle, true)
       })
       if (this.secondThData.length) {
@@ -198,7 +223,8 @@ let AjTable = function (options) {
       if (this.option.multiSelect && colIndex === 0) {
         html += this.addChkCell(false, rowIndex)
       }
-      html += '<div style="' + style.cell + '" class="xc-td-cell">'
+      let divId = ' id="' + col.key + '_' + rowIndex + '"' // select列添加id
+      html += '<div style="' + style.cell + '" class="xc-td-cell"' + (col.type === 'select' ? divId : '') + '>'
 
       let inner = ''
       switch (col.type) {
@@ -207,6 +233,9 @@ let AjTable = function (options) {
         break
       case 'text':
         inner = this.addText(col, data, style)
+        break
+      case 'input':
+        inner = this.addInput(col, data)
         break
       case 'img':
         inner = this.addImg(col, data)
@@ -279,6 +308,15 @@ let AjTable = function (options) {
       }
       return inner
     },
+    // 添加输入框
+    addInput (col, data) {
+      let style = this.utils.checkNull(col.inputWidth) ? ('style="width:' + col.inputWidth + ';" ') : ''
+      let value = 'value="' + (data[col.key] || col.defaultVal || '') + '" '
+      let title = 'title="' + (data[col.key] || col.defaultVal || '') + '" '
+      let html = '<input type="' + col.inputType + '" ' + value + title + style + 'placeholder="' + (col.placeholder || '') + '" class="xc-td-input" />'
+      html = (col.preText || '') + html + (col.nextText || '')
+      return html
+    },
     // 添加图片内容
     addImg (col, data) {
       let src = data[col.key]
@@ -306,7 +344,11 @@ let AjTable = function (options) {
       let inner = ''
       col.btns.forEach(btn => {
         let attr = 'btn-key="' + btn.key + '" row-index="' + rowIndex + '"'
-        let className = 'class="xc-td-btn ' + (data.forbidBtn && data.forbidBtn.includes(btn.key) ? ' forbid ' : '') + col.key + ' ' + btn.key + '"'
+        let className = 'class="xc-td-btn ' +
+                        (data.forbidBtn && data.forbidBtn.includes(btn.key) ? ' forbid ' : '') +
+                        (btn.type === 'link' ? ' link-style ' : '') +
+                        col.key + ' ' +
+                        btn.key + '"'
         inner += '<button ' + attr + className + '>' +
                     '<i class="xc-td-btn-icon ' + btn.iconClass + '"></i>' +
                     btn.label +
@@ -642,6 +684,39 @@ let AjTable = function (options) {
       this.editEvent()
       this.switchEvent()
       this.scrollListener()
+    },
+    // 添加下拉框
+    addSelect (col, data, rowIndex) {
+      let vm = this
+      let opt = this.utils.checkNull(col.selectWidth) ? {inputStyle: {width: col.selectWidth}} : {}
+      opt.id = col.key + '_' + rowIndex
+      opt.isMultiple = col.isMultiple
+      opt.showClear = col.showClear
+      opt.showTree = col.showTree
+      opt.showSearch = col.showSearch
+      opt.preText = col.preText
+      opt.placeholder = col.placeholder
+      opt.callback = {
+        selectOver: function (data) {
+          let param = {key: col.key, selData: data, data: vm.tdData[rowIndex]}
+          if (vm.option.callback.selectOver) {
+            vm.option.callback.selectOver(param)
+          }
+        }
+      }
+
+      let arr = (data[col.key] || col.defaultVal || '').split(',')
+      let opts = []
+      if (arr.length) {
+        col.options.forEach(item => {
+          let obj = this.utils.deepCopy(item)
+          obj.selected = arr.includes(item.value)
+          opts.push(obj)
+        })
+      }
+      console.log(33333, opts)
+      this.selectData[col.key + '_' + rowIndex] = new AjSelect(opt)
+      this.selectData[col.key + '_' + rowIndex].init(opts)
     },
     // 多选
     multiSelectEvent () {
@@ -1068,6 +1143,7 @@ let AjTable = function (options) {
       editOver: null,
       btnClick: null,
       switchOver: null,
+      selectOver: null,
       over: null
     }
   }

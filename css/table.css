@@ -1,3 +1,9 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+}
 .xc-th-box {
   position: absolute;
   top: 0;
@@ -152,20 +158,54 @@
   text-indent: 6px;
   background: none;
   outline: none;
+  font-size: inherit;
+}
+.xc-td-input{
+  width: 100px;
+  height: 28px;
+  line-height: 26px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  background: unset;
+  padding:0 10px;
+  margin:0 8px;
+  outline: none;
+  font-size: inherit;
+}
+.xc-td-input:hover{
+  border-color: #c0c4cc;
+}
+.xc-td-input::-webkit-input-placeholder { /* WebKit browsers */
+  color: #aaa;
+}
+.xc-td-input::-moz-placeholder { /* Mozilla Firefox 19+ */
+  color: #aaa;
+}
+.xc-td-input:-ms-input-placeholder { /* Internet Explorer 10+ */
+  color: #aaa;
 }
 .xc-td-btn {
   margin: 0 5px;
-  padding: 5px 10px;
-  border: 1px solid #2185d0;
+  padding: 4px 8px;
+  border: 1px solid #b3d8ff;
   border-radius: 4px;
   background: #fff;
   color: #2185d0;
   cursor: pointer;
   outline: none;
+  font-size: inherit;
 }
 .xc-td-btn:hover {
   border: 1px solid #409eff;
   color: #409eff;
+}
+.xc-td-btn.link-style {
+  border: none;
+  padding: 5px;
+  background: none;
+}
+.xc-td-btn.link-style:hover {
+  text-decoration: underline;
 }
 .xc-td-btn.forbid {
   cursor: not-allowed;
@@ -173,9 +213,15 @@
   color: #909399;
   background: #f4f4f5;
 }
+.xc-td-btn.link-style.forbid {
+  border: none;
+  padding: 5px;
+  background: none;
+  text-decoration: none;
+}
 .xc-td-btn-icon {
   margin-right: 2px;
-  vertical-align: text-bottom;
+  vertical-align: middle;
 }
 .xc-td-merge {
   position: absolute;
@@ -387,4 +433,9 @@
   position: absolute;
   top: 0;
   right: 0;
+}
+
+/****************************** 下拉框 ******************************/
+.xc-td-cell .vp-select-container{
+  line-height: 28px;
 }
