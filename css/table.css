@@ -435,6 +435,18 @@
   right: 0;
 }
 
+/****************************** 空白行 ******************************/
+.xc-tr-blank .xc-tr-blank-td{
+  padding:0;
+  background: none;
+}
+.xc-tr-blank .xc-tr-blank-td:hover{
+  background: none;
+}
+.xc-tr-blank-div{
+  position: relative;
+  width:100%;
+}
 /****************************** 下拉框 ******************************/
 .xc-td-cell .vp-select-container{
   line-height: 28px;

@@ -65,25 +65,18 @@ let AjTable = function (options) {
       })
       return str
     },
-    // 为没有key的列设置key，为重复key设置bakKey
+    // 为没有key的列设置key
     modifyThData () {
       let num = 0
-      let keys = []
       this.secondThData = []
       this.thColData = []
-      this.thData.forEach((th, index) => {
+      this.thData.forEach(th => {
         if (th.isShow === false) {
           return
         }
         if (!this.utils.checkNull(th.key)) {
-          th.key = th.type === 'no' ? 'aj-table-no' : 'col-class-' + num
+          th.key = th.type === 'no' ? 'no' : 'col-class-' + num
           num++
-        } else {
-          if (keys.includes(th.key)) {
-            th.bakKey = th.key + '-' + index
-          } else {
-            keys.push(th.key)
-          }
         }
         if (this.utils.checkNull(th.children)) {
           let invisibleChildrenNum = 0
@@ -135,9 +128,9 @@ let AjTable = function (options) {
       this.tdTable = this.tdBox.children('.xc-td')
       this.tdBody = this.tdTable.find('tbody')
       this.tdRows = this.tdBox.find('.xc-td-row')
-      this.tdData.forEach((row, rowIndex) => {
+      this.tdData.forEach((row, index) => {
         this.selectCols.forEach(col => {
-          this.addSelect(col, row, rowIndex)
+          this.addSelect(col, row, index)
         })
       })
     },
@@ -190,10 +183,8 @@ let AjTable = function (options) {
         mergeType = this.utils.checkNull(item.children) ? (' colspan="' + item.children.length + '"') : (' rowspan="2"')
       }
       let html = ''
-      let thClass = 'xc-th-th ' + item.key + (item.bakKey ? (' ' + item.bakKey) : '')
-      let thCellClass = 'xc-th-cell ' + item.key + (item.bakKey ? (' ' + item.bakKey) : '') + (item.sort ? (' xc-sort-th ' + sortClass) : '')
-      html += '<th' + mergeType + ' class="' + thClass + '" style="' + thStyle + '" col-key="' + item.key + '"' + title +
-                  '<div class="' + thCellClass + '" style="' + cellStyle + sortStle + '" ' + sortAttr + '>' +
+      html += '<th' + mergeType + ' class="xc-th-th ' + item.key + '" style="' + thStyle + '" col-key="' + item.key + '"' + title +
+                  '<div class="xc-th-cell ' + item.key + ' ' + (item.sort ? 'xc-sort-th' : '') + ' ' + sortClass + '" style="' + cellStyle + sortStle + '" ' + sortAttr + '>' +
                   item.label + sortIcon +
                 '</div>'
       // 添加多选列
@@ -230,16 +221,13 @@ let AjTable = function (options) {
       let data = this.tdData[rowIndex]
       let editAttr = 'class="' + (col.isEdit ? 'xc-td-edit' : '') + '" ' +
                       'row-index="' + rowIndex + '" ' +
-                      ('col-key="' + (col.key || '') + '"') +
-                      (col.bakKey ? ('col-key-bak="' + col.bakKey + '"') : '')
-
+                      'col-key="' + (col.key || '') + '"'
       let html = '<td style="' + style.td + '" ' + editAttr + '>'
       if (this.option.multiSelect && colIndex === 0) {
         html += this.addChkCell(false, rowIndex)
       }
-      let divId = ' id="' + this.option.id + '_' + col.key + (col.bakKey ? ('_' + col.bakKey) : '') + '_' + rowIndex + '"' // select列添加id
-      let tdCellClass = 'xc-td-cell ' + col.key + (col.bakKey ? (' ' + col.bakKey) : '')
-      html += '<div style="' + style.cell + '" class="' + tdCellClass + '"' + (col.type === 'select' ? divId : '') + '>'
+      let divId = ' id="' + this.option.id + '_' + col.key + '_' + rowIndex + '"' // select列添加id
+      html += '<div style="' + style.cell + '" class="xc-td-cell"' + (col.type === 'select' ? divId : '') + '>'
 
       let inner = ''
       switch (col.type) {
@@ -317,7 +305,6 @@ let AjTable = function (options) {
         img = '<img class="xc-td-text-img ' + col.key + '" src="' + col.preImg + '" />'
       }
       let title = (data[col.key] || '---').toString().replace(/<\/?[^>]*>/g, ' ') // 去除dom标签
-      let className = 'xc-td-text ' + col.key + (col.bakKey ? (' ' + col.bakKey) : '')
       let inner = '<span title="' + title + '" class="xc-td-text ' + col.key + '" style="' + style + '">' + img + icon + (data[col.key] || '---') + '</span>'
       if (col.isEdit) {
         inner += '<input class="xc-td-text-input ' + col.key + '" type="text" />'
@@ -419,11 +406,6 @@ let AjTable = function (options) {
     },
     // 位置和列宽
     adjust (resetFlag) {
-      // console.log(7777, this.box.height())
-      if (this.box.height() === 0) {
-        this.box.height(this.thTable.outerHeight() + this.tdTable.outerHeight())
-      }
-
       // 表格总宽度是否固定
       if (this.option.fixTableWidth) {
         this.tdTable.css('width', this.getFixTableWidth())
@@ -508,8 +490,7 @@ let AjTable = function (options) {
           if (width.indexOf('%') !== -1) {
             width = tableW * parseInt(col.width) / 100 + 'px'
           }
-          let thClassName = col.key + (col.bakKey ? ('.' + col.bakKey) : '')
-          this.thHead.find('.xc-th-cell.' + thClassName).width(width)
+          this.thHead.find('.xc-th-cell.' + col.key).width(width)
         })
         if (this.thTable.outerWidth() < tableW) {
           this.thTable.width(tableW)
@@ -517,23 +498,22 @@ let AjTable = function (options) {
       } else {
         this.thColData.forEach((col, i) => {
           let flag = this.emptyDataCol(i)
-          let thClassName = col.key + (col.bakKey ? ('.' + col.bakKey) : '')
           if (flag) {
             let w1 = tds.eq(i).find('.xc-td-cell').outerWidth()
-            let w2 = this.thHead.find('.xc-th-th.' + thClassName).outerWidth()
+            let w2 = this.thHead.find('.xc-th-th.' + col.key).outerWidth()
             let w = w1
             if (!this.utils.checkNull(col.width) && col.type !== 'button') {
               w = w2 > w1 ? w2 : w1
               col.width = w
             }
-            this.thHead.find('.xc-th-cell.' + thClassName).css('width', w + 'px')
+            this.thHead.find('.xc-th-cell.' + col.key).css('width', w + 'px')
           } else {
-            let thw = this.thHead.find('.xc-th-th.' + thClassName).width()
+            let thw = this.thHead.find('.xc-th-th.' + col.key).width()
             thw = thw > 72 ? thw : 72
             tds.eq(i).find('.xc-td-cell').css('width', thw + 'px')
             tds.eq(i).css('width', thw + 'px')
-            this.thHead.find('.xc-th-cell.' + thClassName).css('width', thw + 'px')
-            this.thHead.find('.xc-th-th.' + thClassName).css('width', thw + 'px')
+            this.thHead.find('.xc-th-cell.' + col.key).css('width', thw + 'px')
+            this.thHead.find('.xc-th-th.' + col.key).css('width', thw + 'px')
           }
         })
         this.thTable.width(this.tdTable.width())
@@ -550,8 +530,7 @@ let AjTable = function (options) {
           if (width.indexOf('%') !== -1) {
             width = tableW * parseInt(col.width) / 100 + 'px'
           }
-          let thClassName = col.key + (col.bakKey ? ('.' + col.bakKey) : '')
-          this.thHead.find('.xc-th-cell.' + thClassName).width(width)
+          this.thHead.find('.xc-th-cell.' + col.key).width(width)
         })
         if (this.thTable.outerWidth() < tableW) {
           this.thTable.width(tableW)
@@ -559,10 +538,9 @@ let AjTable = function (options) {
       } else {
         this.thColData.forEach((col, i) => {
           let flag = this.emptyDataCol(i)
-          let thClassName = col.key + (col.bakKey ? ('.' + col.bakKey) : '')
           if (flag) {
             let w1 = tds.eq(i).find('.xc-td-cell').outerWidth()
-            let w2 = this.thHead.find('.xc-th-th.' + thClassName).outerWidth()
+            let w2 = this.thHead.find('.xc-th-th.' + col.key).outerWidth()
             let w = w1
             if (!this.utils.checkNull(col.width) && col.type !== 'button') {
               w = w2 > w1 ? w2 : w1
@@ -570,13 +548,13 @@ let AjTable = function (options) {
               tds.eq(i).css('width', w + 'px')
               col.width = w + 'px'
             }
-            this.thHead.find('.xc-th-th.' + thClassName).css('width', w + 'px')
-            this.thHead.find('.xc-th-cell.' + thClassName).css('width', w + 'px')
+            this.thHead.find('.xc-th-th.' + col.key).css('width', w + 'px')
+            this.thHead.find('.xc-th-cell.' + col.key).css('width', w + 'px')
           } else {
-            let thw = this.thHead.find('.xc-th-th.' + thClassName).outerWidth()
+            let thw = this.thHead.find('.xc-th-th.' + col.key).outerWidth()
             tds.eq(i).find('.xc-td-cell').css('width', thw + 'px')
             tds.eq(i).css('width', thw + 'px')
-            this.thHead.find('.xc-th-cell.' + thClassName).css('width', thw + 'px')
+            this.thHead.find('.xc-th-cell.' + col.key).css('width', thw + 'px')
             col.width = thw + 'px'
           }
         })
@@ -713,7 +691,7 @@ let AjTable = function (options) {
     addSelect (col, data, rowIndex) {
       let vm = this
       let opt = this.utils.checkNull(col.selectWidth) ? {inputStyle: {width: col.selectWidth}} : {}
-      let id = this.option.id + '_' + col.key + (col.bakKey ? ('_' + col.bakKey) : '') + '_' + rowIndex
+      let id = this.option.id + '_' + col.key + '_' + rowIndex
       opt.id = id
       opt.isMultiple = col.isMultiple
       opt.showClear = col.showClear
@@ -907,7 +885,6 @@ let AjTable = function (options) {
           oldData: btn.attr('row-data'),
           rowIndex: btn.attr('row-index')
         }
-
         btn.toggleClass('open')
         if (btn.hasClass('open')) {
           vm.switchAction(btn, true)
@@ -1079,7 +1056,6 @@ let AjTable = function (options) {
         msg: '添加空白行成功',
         targetId: targetId
       }
-      this.adjust()
     },
     // 添加行
     $_addRow (dataObj, rowIndex) {
@@ -1209,26 +1185,23 @@ let AjTable = function (options) {
     fixLastCol: false, // 固定尾列
     multiSelect: false, // 可多选
     multiSelColWidth: 40, // 多选列宽
-    sortKey: '', // 排序字段名称
-    sortType: '', // 排序方式，asc为升序，desc为降序
-    noDataText: '暂无数据', // 无数据时表身区域的显示内容，支持自定义html片断
-    // 开关样式及效果
+    sortKey: '',
+    sortType: '',
+    noDataText: '暂无数据',
     switchSet: {
-      padding: 4, // 滑块距边框距离
-      speed: 300, // 滑块滑动速度
-      easing: 'swing' // 滑块滑动方式
+      padding: 4,
+      speed: 300,
+      easing: 'swing'
     },
-    // 表头样式
     thStyle: {
-      bgColor: '', // 背景色
-      height: '', // 高度
-      color: '', // 文字颜色
-      fontSize: '', // 文字字号
-      fontBold: '', // 文字粗细
-      align: '', // 文字对齐方式
-      borderColor: '' // 边框颜色
+      bgColor: '',
+      height: '',
+      color: '',
+      fontSize: '',
+      fontBold: '',
+      align: '',
+      borderColor: ''
     },
-    // 奇数行样式
     oddStyle: {
       bgColor: '',
       height: '',
@@ -1237,7 +1210,6 @@ let AjTable = function (options) {
       fontBold: '',
       borderColor: ''
     },
-    // 偶数行样式
     evenStyle: {
       bgColor: '',
       height: '',
@@ -1246,18 +1218,17 @@ let AjTable = function (options) {
       fontBold: '',
       borderColor: ''
     },
-    // 回调函数
     callback: {
-      sort: null, // 点击排序
-      multiSelect: null, // 多选行
-      editOver: null, // 文字单元格双击修改内容后，输入框失去焦点事件
-      btnClick: null, // 按钮点击事件
-      switchOver: null, // 开关点击事件
-      selectOver: null, // 下拉选值改变事件
-      setData: null, // 表格赋值后
-      deleteOver: null, // 删除某一行数据后
-      addOver: null, // 添加一行数据后
-      over: null // 表格加载完成
+      sort: null,
+      multiSelect: null,
+      editOver: null,
+      btnClick: null,
+      switchOver: null,
+      selectOver: null,
+      setData: null,
+      deleteOver: null,
+      addOver: null,
+      over: null
     }
   }
   return newObj

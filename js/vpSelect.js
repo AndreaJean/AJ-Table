@@ -7,19 +7,20 @@ let AjSelect = function (options) {
     selectText: '', // 选中项在输入框中显示的文字
     searchkey: '', // 搜索关键字
     box: null, // 生成插件的容器div
+    bodyStyle: {}, // 选项面板的自定义样式
     scrollBarWidth: 0, // 滚动条宽度
+    treeObj: {}, // 存放树对象
     // 初始化
     init (dataArr) {
       this.option = this.utils.mergeObjectDeep(this.Opt, options)
       this.dataArr = this.utils.deepCopy(dataArr)
-      console.log('下拉菜单数据', this.option, this.dataArr)
+      // console.log('下拉菜单数据', this.option, this.dataArr)
       this.box = $('#' + this.option.id)
       this.box.html('')
-      $('.vp-select-body').remove()
       this.initSelect()
       this.createHtml()
       if (this.option.callback.dataOver) {
-        this.option.callback.dataOver(this.utils.deepCopy(this.selectData))
+        this.option.callback.dataOver(this.utils.deepCopy(this.selectData), this)
       }
     },
     // 初始化时的选中数据整理
@@ -47,6 +48,7 @@ let AjSelect = function (options) {
       this.arrow = this.box.find('.vp-select-arrow')
       this.clearBtn = this.box.find('.select-clear-icon')
       this.errorMsg = this.box.find('.vp-error-msg')
+      this.getBodyStyle()
       this.bindHeaderEvent()
     },
     // 生成header
@@ -64,7 +66,7 @@ let AjSelect = function (options) {
                   (this.option.preText !== '' ? ('<label style="' + this.option.preStyle + '">' + this.option.preText + '</label>') : '') +
                   '<div class="vp-select-container">' +
                     '<div class="vp-select-header" style="' + inputStyle + '">' +
-                      '<input value="' + this.selectText + '" title="' + this.selectText + '" placeholder="' + this.option.placeholder + '" autocomplete="off" readonly="readonly" class="vp-select-input" style="' + this.inputInnerStyle + '" />' +
+                      '<input value="' + this.selectText + '" title="已选：' + this.selectText + '" placeholder="' + this.option.placeholder + '" autocomplete="off" readonly="readonly" class="vp-select-input" style="' + this.inputInnerStyle + '" />' +
                       '<span class="vp-select-arrow">' +
                         '<i class="vp-select-icon" style="border-color:' + opt.arrowColor + '"></i> ' +
                       '</span>' +
@@ -74,6 +76,29 @@ let AjSelect = function (options) {
                   '<span class=\'vp-error-msg\'></span>' +
                 '</div>'
       return html
+    },
+    // 获取选项面板样式
+    getBodyStyle () {
+      let opt = this.option.panelStyle
+      let panelStyle = 'background-color:' + opt.bgColor + ';' +
+                       'border-radius:' + opt.borderRadius + ';' +
+                       'border-width:' + opt.borderwith + ';' +
+                       'border-color:' + opt.borderColor + ';' +
+                       'z-index:99999;'
+      let normalStyle = 'color:' + opt.color + ';' +
+                        'font-size:' + opt.fontSize + ';' +
+                        'height:' + opt.lineHeight + ';' +
+                        'line-height:' + opt.lineHeight + ';'
+      let selectedStyle = 'color:' + opt.colorSel + ';' +
+                          'font-size:' + opt.fontSizeSel + ';' +
+                          'background-color:' + opt.bgColorSel + ';' +
+                          'height:' + opt.lineHeight + ';' +
+                          'line-height:' + opt.lineHeight + ';'
+      this.bodyStyle = {
+        panel: panelStyle,
+        normal: normalStyle,
+        selected: selectedStyle
+      }
     },
     // 绑定header事件
     bindHeaderEvent () {
@@ -104,17 +129,17 @@ let AjSelect = function (options) {
       let vm = this
       this.clearBtn.unbind('click').bind('click ', function (e) {
         e.stopPropagation()
+        vm.showBody(false)
         vm.onClear()
       })
     },
     // 恢复默认值 or 清空
     onClear () {
       this.box.html('')
-      $('.vp-select-body').remove()
       this.initSelect()
       this.createHtml()
       if (this.option.callback.clearOver) {
-        this.option.callback.clearOver(this.utils.deepCopy(this.selectData))
+        this.option.callback.clearOver(this.utils.deepCopy(this.selectData), this)
       }
     },
     // Header点击事件
@@ -127,10 +152,15 @@ let AjSelect = function (options) {
           let html = vm.createBody()
           $('body').append(html)
           vm.body = $('#select-body-' + vm.option.id)
-          vm.search = vm.body.find('.vp-select-search-input')
-          vm.items = vm.body.find('.vp-select-item')
+          if (vm.option.showTree) {
+            vm.createTreeOpts()
+          } else {
+            vm.search = vm.body.find('.vp-select-search')
+            vm.items = vm.body.find('.vp-select-item')
+            vm.bindBodyEvent()
+          }
           vm.showBody(true)
-          vm.bindBodyEvent()
+          vm.addListener()
         } else {
           vm.showBody(false)
         }
@@ -138,18 +168,29 @@ let AjSelect = function (options) {
           ev.stopPropagation()
           vm.showBody(false)
         })
-        vm.search.unbind('click').click(function (ev) {
-          ev.stopPropagation()
-        })
+        if (!vm.option.showTree) {
+          vm.search.unbind('click').click(function (ev) {
+            ev.stopPropagation()
+          })
+        }
       })
     },
     // 生成选项面板
     createBody () {
-      let style = this.getBodyStyle()
+      let style = this.bodyStyle
       let bodyClass = 'vp-select-body' + (this.option.isMultiple ? ' multiple' : '') + (this.option.showSearch ? ' search' : '')
-      let html = '<div class="' + bodyClass + '" id="select-body-' + this.option.id + '" style="' + style.panel + '">' +
-                    (this.option.showSearch ? '<div class="vp-select-search"><input placeholder="搜索" class="vp-select-search-input" /></div>' : '') +
-                    '<ul class="vp-select-body-ul">'
+      let position = 'left:' + this.header.offset().left + 'px;' +
+                     'min-width:' + this.header.outerWidth() + 'px;'
+      let html = '<div class="' + bodyClass + '" id="select-body-' + this.option.id + '" style="' + style.panel + position + '">'
+      html += this.option.showTree ? '' : this.createNormalOpts()
+      html += '</div>'
+      return html
+    },
+    // 生成普通选项
+    createNormalOpts () {
+      let style = this.bodyStyle
+      let html = (this.option.showSearch ? '<div class="vp-select-search"><input placeholder="搜索" class="vp-select-search-input" /></div>' : '') +
+                '<ul class="vp-select-body-ul">'
       this.dataArr.forEach(item => {
         let selected = this.selectVal.includes(item.value)
         let itemStyle = ' style="' + (selected ? style.selected : style.normal) + '"'
@@ -159,42 +200,73 @@ let AjSelect = function (options) {
                   '<span>' + item.label + '</span>' +
                 '</li>'
       })
-      html += '</ul></div>'
+      html += '</ul>'
       return html
     },
-    // 获取选项面板样式
-    getBodyStyle () {
-      let opt = this.option.panelStyle
-      let panelStyle = 'background-color:' + opt.bgColor + ';' +
-                       'border-radius:' + opt.borderRadius + ';' +
-                       'border-width:' + opt.borderwith + ';' +
-                       'border-color:' + opt.borderColor + ';' +
-                       'min-width:' + this.header.outerWidth() + 'px;' +
-                       'top:' + (this.header.offset().top + this.header.outerHeight() + 2) + 'px;' +
-                       'left:' + this.header.offset().left + 'px;' +
-                       'z-index:99999;'
-
-      let normalStyle = 'color:' + opt.color + ';' +
-                        'font-size:' + opt.fontSize + ';'
-      let selectedStyle = 'color:' + opt.colorSel + ';' +
-                          'font-size:' + opt.fontSizeSel + ';' +
-                          'background-color:' + opt.bgColorSel + ';'
-      return {
-        panel: panelStyle,
-        normal: normalStyle,
-        selected: selectedStyle
+    // 生成选项树
+    createTreeOpts () {
+      let vm = this
+      let setting = {
+        id: 'select-body-' + this.option.id,
+        preText: '',
+        treeMultiSelect: this.option.isMultiple,
+        callback: {
+          itemClick: function (data) {
+            data = JSON.parse(data)
+            let arr = []
+            let text = []
+            if (vm.option.isMultiple) {
+              data.forEach(item => {
+                item.value = item.id
+                arr.push(item)
+                text.push(item.label)
+              })
+              vm.selectText = text.join('，')
+            } else {
+              arr = new Array(data)
+              vm.selectText = data.label
+              vm.showBody(false)
+            }
+            vm.setSelectText()
+            if (vm.option.callback.selectOver) {
+              vm.option.callback.selectOver(vm.utils.deepCopy(arr), vm)
+            }
+          }
+        }
       }
+      this.treeObj = new VpTree(setting, this.dataArr)
+      this.treeObj.init()
     },
     // 显示/隐藏选项面板
     showBody (flag) {
       if (flag) {
         $('.vp-select-header').removeClass('open')
         this.header.addClass('open')
-        this.body.css({'opacity': 1, 'transform-origin': 'center top 0px', 'transform': 'scaleY(1)'})
       } else {
         this.header.removeClass('open')
-        this.body.css({'opacity': 0, 'transform-origin': 'center top 0px', 'transform': 'scaleY(0)'})
       }
+      this.body.css(this.getBodyPosition(flag))
+    },
+    getBodyPosition (flag) {
+      let h = this.body.outerHeight()
+      let bottom = $(window).height() - this.header.offset().top - this.header.outerHeight() - 2
+      let css = {}
+      if (h <= bottom) {
+        css = {
+          'opacity': flag ? 1 : 0,
+          'transform': flag ? 'scaleY(1)' : 'scaleY(0)',
+          'transform-origin': 'center top 0px',
+          'top': (this.header.offset().top + this.header.outerHeight() + 2) + 'px'
+        }
+      } else {
+        css = {
+          'opacity': flag ? 1 : 0,
+          'transform': flag ? 'scaleY(1)' : 'scaleY(0)',
+          'transform-origin': 'center bottom 0px',
+          'top': (this.header.offset().top - h - 2) + 'px'
+        }
+      }
+      return css
     },
     // 绑定选项面板事件
     bindBodyEvent () {
@@ -219,20 +291,20 @@ let AjSelect = function (options) {
           let val = item.attr('data-val')
           if (arr.includes(val)) {
             arr.splice(arr.indexOf(val), 1)
-            item.removeClass('select')
+            item.removeClass('select').attr('style', vm.bodyStyle.normal)
           } else {
             arr.push(val)
-            item.addClass('select')
+            item.addClass('select').attr('style', vm.bodyStyle.selected)
           }
         } else {
           arr = [item.attr('data-val')]
-          vm.items.removeClass('select')
-          item.addClass('select')
+          vm.items.removeClass('select').attr('style', vm.bodyStyle.normal)
+          item.addClass('select').attr('style', vm.bodyStyle.selected)
         }
         vm.getSelectData(arr)
         vm.setSelectText()
         if (vm.option.callback.selectOver) {
-          vm.option.callback.selectOver(vm.utils.deepCopy(vm.selectData))
+          vm.option.callback.selectOver(vm.utils.deepCopy(vm.selectData), vm)
         }
       })
     },
@@ -269,12 +341,23 @@ let AjSelect = function (options) {
     // 设置显示的选中项
     setSelectText () {
       this.input.val(this.selectText)
-      this.input.attr('title', this.selectText)
+      this.input.attr('title', '已选：' + this.selectText)
+    },
+    // 添加页面滚动监听、resize监听
+    addListener () {
+      let vm = this
+      $(window).unbind('resize').bind('resize ', function (e) {
+        vm.showBody(false)
+      })
+      $(document).unbind('scroll').bind('scroll ', function (e) {
+        vm.showBody(false)
+      })
     },
     // 外部调用方法==============================
     // 获取选中项数据
     $_getData () {
-      return this.utils.deepCopy(this.selectData)
+      let data = this.option.isMultiple ? this.utils.deepCopy(this.selectData) : this.utils.deepCopy(this.selectData[0])
+      return JSON.stringify(data)
     },
     // 设置选中项
     $_setData (selectedVal) {
@@ -288,7 +371,7 @@ let AjSelect = function (options) {
         this.setSelectText()
 
         if (this.option.callback.setData) {
-          this.option.callback.setData(this.utils.deepCopy(this.selectData))
+          this.option.callback.setData(this.utils.deepCopy(this.selectData), this)
         }
       }
     },
@@ -430,6 +513,7 @@ let AjSelect = function (options) {
       borderColor: '',
       color: '',
       fontSize: '',
+      lineHeight: '',
       colorSel: '',
       fontSizeSel: '',
       bgColorSel: ''

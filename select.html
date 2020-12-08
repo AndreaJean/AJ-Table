@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <title>下拉框测试</title>
   <link rel="stylesheet" type="text/css" href="css/select.css">
+  <link rel="stylesheet" type="text/css" href="http://at.alicdn.com/t/font_1586653_i7i0p90dw.css">
 </head>
 
 <body>
@@ -22,6 +23,7 @@
 
 </html>
 <script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/vpTree.js"></script>
 <script type="text/javascript" src="js/vpSelect.js"></script>
 <script type="text/javascript">
 const setting = {
@@ -53,8 +55,8 @@ const setting1 = {
   preText: '说明：',
   preStyle: '',
   placeholder: '',
-  isMultiple: true,
-  showTree: false,
+  isMultiple: false,
+  showTree: true,
   showClear: true,
   showSearch: true,
   callback: {
@@ -83,6 +85,41 @@ const opts = [
   {label: '越南', value: '越南', selected: false},
   {label: '泰国', value: '泰国', selected: false}
 ]
+const trees = [
+  {
+    id: '010',
+    label: '北京',
+    level: 1,
+    children: [
+      {
+        id: '010-CY',
+        label: '朝阳区',
+        level: 2,
+        children: [
+          { id: '010-CY-AYC', label: '奥运村街道', level: 3, children: [] },
+          { id: '010-CY-YYC', label: '亚运村街道', level: 3, children: [] }
+        ]
+      },
+      {
+        id: '010-CP',
+        label: '昌平区',
+        level: 2,
+        children: [
+          {
+            id: '010-CP-TTYB',
+            label: '天通苑北街道',
+            level: 3,
+            children: []
+          }
+        ]
+      }
+    ]
+  },
+  { id: '020', label: '上海', level: 1, children: [] },
+  { id: '0371', label: '郑州', level: 1, children: [] },
+  { id: '0391', label: '焦作', level: 1, children: [] }
+]
+
 window.onload = function () {
   let mySelect = new AjSelect(setting)
   mySelect.init(opts)
@@ -104,7 +141,7 @@ window.onload = function () {
   })
 
   let mySelect1 = new AjSelect(setting1)
-  mySelect1.init(opts)
+  mySelect1.init(trees)
 }
 </script>
 <style>
@@ -117,7 +154,8 @@ body {
   width: 100%;
   height: 100%;
   margin: 0px;
-  padding: 20px;
+  /* padding:800px 20px 20px 20px; */
+  padding:100px 20px 20px 20px;
 }
 #demo1 {
   position: relative;

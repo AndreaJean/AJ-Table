@@ -17,6 +17,7 @@
   </div> -->
   <button id='reset'>reset</button>
   <button id='addRow'>addRow</button>
+  <button id='getData'>getData</button>
 
   <!-- <div class='test'></div> -->
 </body>
@@ -40,11 +41,10 @@
       myTable.$_reset()
     })
     $('#addRow').click(function () {
-      myTable.$_addRow({name: '成吉思汗'})
+      myTable.$_addRow({ name: 'C罗', age: '36', nationality: '葡萄牙', sex: '男', marriage: '2' }, 9)
     })
-    $('#tableDemo').on('click', '.delete', function () {
-      let index = $(this).attr('row-index')
-      myTable.$_deleteRow(index)
+    $('#getData').click(function () {
+      console.log(myTable.$_getData())
     })
   }
 </script>
@@ -80,7 +80,7 @@
     display: none;
   }
 
-  .main {
+  /* .main {
     position: absolute;
     width: auto;
     height: auto;
@@ -88,24 +88,22 @@
     top: 100px;
     right: 100px;
     bottom: 400px;
-    /* margin: 40px auto; */
-    /* border: 1px solid #ebeef5; */
     font-size: 12px;
     color: #333;
     overflow: hidden;
     font-weight: normal;
-    /* text-decoration: underline; */
-  }
-  /* .main {
+  } */
+  .main {
     position: relative;
     width: 1400px;
     height: 500px;
+    /* height:auto; */
     border: 1px solid #ebeef5;
     font-size: 14px;
     color: #333;
     overflow: hidden;
     font-weight: normal;
-  } */
+  }
   .test{
     position: absolute;
     top:650px;
@@ -115,4 +113,15 @@
     height:100px;
     background-color: #ccc;
   }
+  button{
+  margin: 0 5px;
+  padding: 6px 12px;
+  border: 1px solid #b3d8ff;
+  border-radius: 4px;
+  background: #fff;
+  color: #2185d0;
+  cursor: pointer;
+  outline: none;
+  font-size: inherit;
+}
 </style>
