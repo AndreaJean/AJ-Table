@@ -487,41 +487,44 @@ let AjSelect = function (options) {
   }
   // 默认设置
   newObj.Opt = {
-    id: '',
-    preText: '',
-    preStyle: '',
-    placeholder: '',
-    isMultiple: false,
-    showTree: false,
-    showClear: false,
-    showSearch: false,
+    id: '', // 生成下拉框的父级DOM元素id
+    preText: '', // 前置文字，放置于下拉框前的说明文字
+    preStyle: '', // 前置文字样式
+    placeholder: '', // 下拉框内的提示文字
+    isMultiple: false, // 是否多选
+    showTree: false, // 选项是否为树结构
+    showClear: false, // 是否显示清空按钮
+    showSearch: false, // 是否开启选项过滤功能
+    // 下拉框的样式
     inputStyle: {
-      width: '',
-      height: '',
-      bgColor: '',
-      color: '',
-      fontSize: '',
-      borderRadius: '',
-      borderwith: '',
-      borderColor: '',
-      arrowColor: ''
+      width: '', // 宽度
+      height: '', // 高度
+      bgColor: '', // 背景色
+      color: '', // 文字颜色
+      fontSize: '', // 文字字号
+      borderRadius: '', // 边框圆角
+      borderwith: '', // 边框粗细
+      borderColor: '', // 边框颜色
+      arrowColor: ''// 下拉框右侧尖角图标颜色
     },
+    // 选项面板样式
     panelStyle: {
-      bgColor: '',
-      borderRadius: '',
-      borderwith: '',
-      borderColor: '',
-      color: '',
-      fontSize: '',
-      lineHeight: '',
-      colorSel: '',
-      fontSizeSel: '',
-      bgColorSel: ''
+      bgColor: '', // 背景色
+      borderRadius: '', // 边框圆角
+      borderwith: '', // 边框粗细
+      borderColor: '', // 边框颜色
+      color: '', // 选项文字颜色
+      fontSize: '', // 选项文字字号
+      lineHeight: '', // 选项文字行高
+      colorSel: '', // 选中选项文字颜色
+      fontSizeSel: '', // 选中选项文字字号
+      bgColorSel: '' // 选中选项背景色
     },
+    // 回调函数
     callback: {
-      clearOver: null,
+      clearOver: null, // 清空事件
       selectOver: null, // 选中项改变
-      dataOver: null,
+      dataOver: null, // 选项加载完毕
       setData: null // 调用$_setData后
     }
   }
