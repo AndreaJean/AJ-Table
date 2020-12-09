@@ -154,6 +154,7 @@ let AjSelect = function (options) {
           vm.body = $('#select-body-' + vm.option.id)
           if (vm.option.showTree) {
             vm.createTreeOpts()
+            vm.treeObj.$_setData(vm.selectVal.join(','))
           } else {
             vm.search = vm.body.find('.vp-select-search')
             vm.items = vm.body.find('.vp-select-item')
@@ -213,23 +214,26 @@ let AjSelect = function (options) {
         callback: {
           itemClick: function (data) {
             data = JSON.parse(data)
-            let arr = []
             let text = []
+            vm.selectVal = []
+            vm.selectData = []
             if (vm.option.isMultiple) {
               data.forEach(item => {
                 item.value = item.id
-                arr.push(item)
+                vm.selectData.push(item)
                 text.push(item.label)
+                vm.selectVal.push(item.value)
               })
               vm.selectText = text.join('，')
             } else {
-              arr = new Array(data)
+              vm.selectData = new Array(data)
               vm.selectText = data.label
+              vm.selectVal = new Array(data.id)
               vm.showBody(false)
             }
             vm.setSelectText()
             if (vm.option.callback.selectOver) {
-              vm.option.callback.selectOver(vm.utils.deepCopy(arr), vm)
+              vm.option.callback.selectOver(vm.utils.deepCopy(vm.selectData), vm)
             }
           }
         }

@@ -1079,7 +1079,6 @@ let AjTable = function (options) {
         msg: '添加空白行成功',
         targetId: targetId
       }
-      this.adjust()
     },
     // 添加行
     $_addRow (dataObj, rowIndex) {
