@@ -236,5 +236,5 @@ var tdData = [
 |$_getData|获取当前表格数据(含输入框中值和下拉框选中值)|---|data: {Array}，参见tdData|
 |$_reviewMultiSelect|设置行选中|indexList：{Array}，选中行的index（从0记数）数组|
 |$_addBlankRow|显示/隐藏空白行|flag：{Boolean}，true显示，false隐藏；rowIndex：{Number}，目标行x（从0记数）；content：{String}，空白行内显示的内容，html片断|data: {Object}，成功或失败信息对象，成功信息包含插入html片断的div的id|
-|$_addRow|添加行|dataObj：{Object}，格式参见tdData元素；rowIndex：{Number}，插入位置index（从0记数）|---|
+|$_addRow|添加行|dataObj：{Object}，格式参见tdData元素；rowIndex：{Number}，插入位置index（从0记数），为空时默认插入最后一行后|---|
 |$_deleteRow|删除行|rowIndex：{Number}，目标行index（从0记数）|data: {Object}，成功或失败信息对象|
