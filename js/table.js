@@ -471,6 +471,15 @@ let AjTable = function (options) {
           vm.fixCol('right')
         }
         vm.bindEvent()
+
+        let userAgent = navigator.userAgent
+        if (userAgent.indexOf('Trident') > -1 && userAgent.indexOf('rv:11.0') > -1) {
+          $('.xc-chk-cell').each(function () {
+            $(this).height($(this).parent().outerHeight())
+          })
+          $('.xc-td>tbody>tr>td').css('border-bottom', 'none')
+        }
+
         if (vm.option.callback.over && !resetFlag) {
           vm.option.callback.over(vm)
         }
@@ -844,8 +853,8 @@ let AjTable = function (options) {
           obj.type = 'asc'
         } else {
           target.removeClass('asc').removeClass('desc')
-          btn.addClass('asc')
-          obj.type = 'asc'
+          btn.addClass('desc')
+          obj.type = 'desc'
         }
         if (vm.option.callback.sort) {
           vm.option.callback.sort(obj, vm)
