@@ -4,6 +4,15 @@
   box-sizing: border-box;
   outline: none;
 }
+input::-webkit-input-placeholder { /* WebKit browsers */
+  color: #c0c4cc;
+}
+input::-moz-placeholder { /* Mozilla Firefox 19+ */
+  color: #c0c4cc;
+}
+input:-ms-input-placeholder { /* Internet Explorer 10+ */
+  color: #c0c4cc;
+}
 .xc-th-box {
   position: absolute;
   top: 0;
@@ -174,15 +183,6 @@
 }
 .xc-td-input:hover{
   border-color: #c0c4cc;
-}
-.xc-td-input::-webkit-input-placeholder { /* WebKit browsers */
-  color: #aaa;
-}
-.xc-td-input::-moz-placeholder { /* Mozilla Firefox 19+ */
-  color: #aaa;
-}
-.xc-td-input:-ms-input-placeholder { /* Internet Explorer 10+ */
-  color: #aaa;
 }
 .xc-td-btn {
   margin: 0 5px;
