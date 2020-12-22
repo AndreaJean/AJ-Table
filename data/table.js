@@ -129,6 +129,7 @@ let opt = {
   fixTableWidth: true,
   noTh: false,
   fixTh: true,
+  heightAuto: true, // 表格高度自适应
   fixFirstCol: false,
   fixLastCol: false,
   multiSelect: true,

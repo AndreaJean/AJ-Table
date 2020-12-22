@@ -41,6 +41,7 @@ myTable.init(thData, tdData) //初始化
   fixTableWidth: true, // 表格总宽度，true为等于父级元素宽度，false为自适应
   noTh: false, // 不使用表头
   fixTh: true, // 表头固定
+  heightAuto: false, // 表格高度自适应
   fixFirstCol: false, // 固定首列
   fixLastCol: false, // 固定尾列
   multiSelect: false, // 可多选
@@ -168,7 +169,8 @@ var thData = [
 ```JavaScript
   { key: 'nationality', label: '国籍', type: 'select', options: opts, selectWidth: '100px', preText: '选择', defaultVal: '', isMultiple: false, showClear: true, showTree: false, placeholder: '国籍' },
 ```
-- inputWidth: {String}，下拉框宽度（可为空）
+- options: {Array}，下拉框选项数据
+- selectWidth: {String}，下拉框宽度（可为空）
 - preText: {String}，前置文字，放置于下拉框前的文字（可为空）
 - defaultVal: {String}，默认值（可为空）
 - placeholder: {String}，下拉框内的提示文字（可为空）

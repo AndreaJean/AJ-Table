@@ -419,8 +419,7 @@ let AjTable = function (options) {
     },
     // 位置和列宽
     adjust (resetFlag) {
-      // console.log(7777, this.box.height())
-      if (this.box.height() === 0) {
+      if (this.option.heightAuto) {
         this.box.height(this.thTable.outerHeight() + this.tdTable.outerHeight())
       }
 
@@ -1213,6 +1212,7 @@ let AjTable = function (options) {
     fixTableWidth: true, // 表格总宽度，自适应或者等于显示区域
     noTh: false, // 不使用表头
     fixTh: true, // 表头固定
+    heightAuto: false, // 表格高度自适应
     fixFirstCol: false, // 固定首列
     fixLastCol: false, // 固定尾列
     multiSelect: false, // 可多选
