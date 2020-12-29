@@ -731,7 +731,7 @@ let AjTable = function (options) {
       opt.placeholder = col.placeholder
       opt.callback = {
         selectOver: function (data, selectObj) {
-          let nv = vm.utils.deepCopy(vm.tdData[rowIndex])
+          let nv = vm.utils.deepCopy(vm.tdDataEdit[rowIndex])
           var arr = []
           data.forEach(a => {
             arr.push(a.value)
@@ -739,7 +739,7 @@ let AjTable = function (options) {
           nv[col.key] = arr.join(',')
           vm.tdDataEdit[rowIndex] = vm.utils.deepCopy(nv)
 
-          let param = {key: col.key, selData: data, data: vm.tdData[rowIndex], rowIndex: rowIndex}
+          let param = {key: col.key, selData: data, data: vm.tdDataEdit[rowIndex], rowIndex: rowIndex}
           if (vm.option.callback.selectOver) {
             vm.option.callback.selectOver(param, vm, selectObj)
           }
