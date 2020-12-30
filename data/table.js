@@ -90,7 +90,7 @@ const trees = [
 let thData = [
   { key: 'num', label: '序号', type: 'no', width: '100px', color: '', align: 'center' },
   { key: 'name', label: '姓名', type: 'text', width: '100px', color: 'red', align: 'left', sort: true, isBreak: false, preImg: 'https://wwc.alicdn.com/avatar/getAvatar.do?userNick=&width=50&height=50&type=sns&_input_charset=UTF-8' },
-  { key: 'age', label: '年龄', type: 'text', width: '100px', color: '', align: 'left', preIcon: 'icon-new-xinwen-copy', isEdit: true, sort: true },
+  { key: 'age', label: '年龄年龄年龄年龄年龄年龄年龄', type: 'text', width: '100px', color: '', align: 'left', preIcon: 'icon-new-xinwen-copy', isEdit: true, sort: true },
   { key: 'nationality', label: '国籍', type: 'select', options: opts, selectWidth: '100px', preText: '选择', defaultVal: '', isMultiple: false, showClear: true, showTree: false, placeholder: '国籍' },
   // { key: 'region', label: '区域', type: 'select', options: trees, selectWidth: '100px', preText: '选择', defaultVal: '', isMultiple: false, showClear: true, showTree: true, placeholder: '区域' },
   { key: 'marriage', label: '婚否', type: 'switch', width: '100px', align: 'center', trueVal: '1', trueLabel: '已婚', falseVal: '2', falseLabel: '未婚' },

@@ -422,7 +422,6 @@ let AjTable = function (options) {
       if (this.option.heightAuto) {
         this.box.height(this.thTable.outerHeight() + this.tdTable.outerHeight())
       }
-
       // 表格总宽度是否固定
       if (this.option.fixTableWidth) {
         this.tdTable.css('width', this.getFixTableWidth())
@@ -436,6 +435,9 @@ let AjTable = function (options) {
         this.tdBox.css('top', this.thTable.outerHeight())
         this.secondThData.length ? this.ajustColWidthD() : this.ajustColWidthS()
         // 重复一遍，防止表头列宽调整后，有某列表头文字从多行变为一行使表头高度发生变化
+        if (this.option.heightAuto) {
+          this.box.height(this.thTable.outerHeight() + this.tdTable.outerHeight())
+        }
         if (this.option.fixTableWidth) {
           this.tdTable.css('width', this.getFixTableWidth())
         }
