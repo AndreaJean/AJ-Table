@@ -2,7 +2,6 @@ let AjTable = function (options) {
   let newObj = {
     thData: [],
     tdData: [],
-    tdDataEdit: [], // 存储操作输入框、下拉框、开关等修改后的表格数据
     box: null,
     thBox: {},
     thTable: {},
@@ -35,16 +34,16 @@ let AjTable = function (options) {
       }
       this.thData = this.utils.deepCopy(th)
       this.tdData = this.utils.deepCopy(td)
-      this.tdDataEdit = this.utils.deepCopy(td)
       this.modifyThData()
+      this.modifyTdData()
       if (!this.tdData || !this.tdData.length) {
         this.noDataFlag = true
         this.option.fixTh = true
       }
       this.box = $('#' + this.option.id)
-      this.box.find('table').remove()
+      // this.box.find('table').remove()
       this.box.find('.xc-td-box').remove()
-      // this.colNum = this.secondThData.length ? this.thColData.length : this.thData.length
+      this.box.find('.xc-th-box').remove()
       this.colNum = this.thColData.length
       this.rowNum = this.tdData.length
       this.createHtml()
@@ -110,6 +109,16 @@ let AjTable = function (options) {
         }
       })
       // console.log(this.secondThData)
+    },
+    // 整理真实数据，将下拉选和输入框的默认值赋予空值行
+    modifyTdData () {
+      this.tdData.forEach(item => {
+        this.thData.forEach(col => {
+          if (['select', 'input'].includes(col.type) && !this.utils.checkNull(item[col.key]) && this.utils.checkNull(col.defaultVal)) {
+            item[col.key] = col.defaultVal
+          }
+        })
+      })
     },
     // 生成html
     createHtml () {
@@ -733,15 +742,15 @@ let AjTable = function (options) {
       opt.placeholder = col.placeholder
       opt.callback = {
         selectOver: function (data, selectObj) {
-          let nv = vm.utils.deepCopy(vm.tdDataEdit[rowIndex])
+          let nv = vm.utils.deepCopy(vm.tdData[rowIndex])
           var arr = []
           data.forEach(a => {
             arr.push(a.value)
           })
           nv[col.key] = arr.join(',')
-          vm.tdDataEdit[rowIndex] = vm.utils.deepCopy(nv)
+          vm.tdData[rowIndex] = vm.utils.deepCopy(nv)
 
-          let param = {key: col.key, selData: data, data: vm.tdDataEdit[rowIndex], rowIndex: rowIndex}
+          let param = {key: col.key, selData: data, data: vm.tdData[rowIndex], rowIndex: rowIndex}
           if (vm.option.callback.selectOver) {
             vm.option.callback.selectOver(param, vm, selectObj)
           }
@@ -929,7 +938,7 @@ let AjTable = function (options) {
 
         let nv = JSON.parse(btn.attr('row-data'))
         nv[btn.attr('col-key')] = obj.newValue
-        vm.tdDataEdit[btn.attr('row-index')] = this.utils.deepCopy(nv)
+        vm.tdData[btn.attr('row-index')] = this.utils.deepCopy(nv)
 
         if (vm.option.callback.switchOver) {
           vm.option.callback.switchOver(obj, vm)
@@ -944,7 +953,7 @@ let AjTable = function (options) {
         let val = $(this).val()
         let rowIndex = $(this).attr('row-index')
         let key = $(this).attr('col-key')
-        vm.tdDataEdit[rowIndex][key] = val
+        vm.tdData[rowIndex][key] = val
       })
     },
     // 开关滑块动画
@@ -1033,7 +1042,7 @@ let AjTable = function (options) {
     },
     // 获取当前表格数据
     $_getData () {
-      return this.tdDataEdit
+      return this.tdData
     },
     // 重新调整列宽
     $_reset () {
@@ -1041,7 +1050,7 @@ let AjTable = function (options) {
     },
     // 添加空白行
     $_addBlankRow (flag, rowIndex, content) {
-      if (rowIndex >= this.tdDataEdit.length) {
+      if (rowIndex >= this.tdData.length) {
         return {
           status: 'error',
           msg: '传入行数不可大于表格显示行数'
@@ -1093,16 +1102,16 @@ let AjTable = function (options) {
     // 添加行
     $_addRow (dataObj, rowIndex) {
       let obj = this.utils.deepCopy(dataObj)
-      let index = (rowIndex && rowIndex > 0 && rowIndex < this.tdDataEdit.length) ? rowIndex : this.tdDataEdit.length
-      this.tdDataEdit.splice(index, 0, obj)
-      this.init(this.thData, this.tdDataEdit)
+      let index = (rowIndex && rowIndex > 0 && rowIndex < this.tdData.length) ? rowIndex : this.tdData.length
+      this.tdData.splice(index, 0, obj)
+      this.init(this.thData, this.tdData)
       if (this.option.callback.addOver) {
         this.option.callback.addOver(this)
       }
     },
     // 删除行
     $_deleteRow (rowIndex) {
-      if (rowIndex >= this.tdDataEdit.length) {
+      if (rowIndex >= this.tdData.length) {
         return {
           status: 'error',
           msg: '传入行数不可大于表格显示行数'
@@ -1115,8 +1124,8 @@ let AjTable = function (options) {
         }
       }
 
-      this.tdDataEdit.splice(rowIndex, 1)
-      this.init(this.thData, this.tdDataEdit)
+      this.tdData.splice(rowIndex, 1)
+      this.init(this.thData, this.tdData)
       if (this.option.callback.deleteOver) {
         this.option.callback.deleteOver(this)
       }

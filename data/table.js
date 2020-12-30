@@ -91,7 +91,7 @@ let thData = [
   { key: 'num', label: '序号', type: 'no', width: '100px', color: '', align: 'center' },
   { key: 'name', label: '姓名', type: 'text', width: '100px', color: 'red', align: 'left', sort: true, isBreak: false, preImg: 'https://wwc.alicdn.com/avatar/getAvatar.do?userNick=&width=50&height=50&type=sns&_input_charset=UTF-8' },
   { key: 'age', label: '年龄年龄年龄年龄年龄年龄年龄', type: 'text', width: '100px', color: '', align: 'left', preIcon: 'icon-new-xinwen-copy', isEdit: true, sort: true },
-  { key: 'nationality', label: '国籍', type: 'select', options: opts, selectWidth: '100px', preText: '选择', defaultVal: '', isMultiple: false, showClear: true, showTree: false, placeholder: '国籍' },
+  { key: 'nationality', label: '国籍', type: 'select', options: opts, selectWidth: '100px', preText: '选择', defaultVal: '中国', isMultiple: false, showClear: true, showTree: false, placeholder: '国籍' },
   // { key: 'region', label: '区域', type: 'select', options: trees, selectWidth: '100px', preText: '选择', defaultVal: '', isMultiple: false, showClear: true, showTree: true, placeholder: '区域' },
   { key: 'marriage', label: '婚否', type: 'switch', width: '100px', align: 'center', trueVal: '1', trueLabel: '已婚', falseVal: '2', falseLabel: '未婚' },
   { key: 'sex', label: '性别性别', type: 'text', width: '', color: '', align: 'center', mergeCell: true },
@@ -101,8 +101,8 @@ let thData = [
   { label: '操作', type: 'button', width: '300px', align: 'center', btns: testBtn }
 ]
 let tdData = [
-  { forbidSel: true, name: '刘翔', age: '', nationality: '中国', sex: '女', count: '3', marriage: '1', forbidBtn: ['donwload', 'edit'], photo: 'https://pic.xiami.net/images/artistlogo/60/13751627012360.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
-  { name: '李娜李娜李娜李娜李娜李娜李娜', age: '', nationality: '中国', sex: '男', count: '35', marriage: '2', photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039605_405E.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
+  { forbidSel: true, name: '刘翔', age: '', nationality: '', sex: '女', count: '3', marriage: '1', forbidBtn: ['donwload', 'edit'], photo: 'https://pic.xiami.net/images/artistlogo/60/13751627012360.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
+  { name: '李娜李娜李娜李娜李娜李娜李娜', age: '', nationality: '', sex: '男', count: '35', marriage: '2', photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039605_405E.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
   { forbidSel: true, name: '卡卡', age: '39', nationality: '巴西', sex: '男', marriage: '1', photo: 'https://pic.xiami.net/images/artistlogo/60/13751627012360.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
   { forbidSel: true, name: '贝克汉姆', age: '54', nationality: '英国', sex: '女', count: '22', marriage: '1', photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039645_Qy82.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
   { name: '厄齐尔', age: '51', nationality: '德国', sex: '女', count: '14', marriage: '2', photo: 'https://pic.xiami.net/images/artistlogo/60/13751627012360.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
