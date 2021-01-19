@@ -29,45 +29,52 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
   box-sizing: border-box;
   border: none;
   text-decoration: inherit;
-  /* table-layout: fixed; */
 }
 .xc-th-head>tr>th {
   position: relative;
   border: none;
   padding: 0;
-  border-bottom: 1px solid #ebeef5;
-  border-right: 1px solid #ebeef5;
   background: #f5f7fa;
   height: 32px;
   font-weight: inherit;
   text-decoration: inherit;
 }
+.horizontal-border .xc-th-head>tr>th {
+  border-bottom: 1px solid #ebeef5;
+}
+.vertical-border .xc-th-head>tr>th {
+  border-right: 1px solid #ebeef5;
+}
 .xc-th-cell-scrollbar {
   position: absolute;
   top: 0;
   height: 100%;
-  border-bottom: 1px solid #ebeef5;
-  border-left: 1px solid #ebeef5;
   box-sizing: content-box;
   background: inherit;
+}
+.horizontal-border .xc-th-cell-scrollbar {
+  border-bottom: 1px solid #ebeef5;
+}
+.vertical-border .xc-th-cell-scrollbar {
+  border-left: 1px solid #ebeef5;
 }
 .xc-th-cell {
   display: block;
   box-sizing: border-box;
   font: inherit;
-  font-weight: bold;
+  /* font-weight: bold; */
   color: inherit;
   vertical-align: middle;
   text-decoration: inherit;
-  padding: 0 10px;
-  white-space:nowrap;
+  padding: 5px 10px;
+  /* white-space:nowrap; */
+  line-height: 20px;
 }
-.xc-th-icon-pre, .xc-th-icon-next {
+.xc-th-icon-pre,
+.xc-th-icon-next {
   display: none;
 }
-
-/****************************** 单元格 ******************************/
-
+/* 单元格 */
 .xc-td-box {
   position: absolute;
   top: 0;
@@ -78,15 +85,15 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
   text-decoration: inherit;
   box-sizing: border-box;
 }
-.xc-td-no-data{
+.xc-td-no-data {
   position: absolute;
-  top:50%;
-  left:50%;
+  top: 50%;
+  left: 50%;
   display: block;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   text-align: center;
   font-size: 14px;
-  color:#666;
+  color: #666;
 }
 .xc-td {
   border-collapse: collapse;
@@ -94,7 +101,7 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
   border: none;
   margin-bottom: -1px;
   text-decoration: inherit;
-  /* background: #fff; */
+  background: #fff;
 }
 .xc-td>tbody {
   text-decoration: inherit;
@@ -105,17 +112,21 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 .xc-td>tbody>tr>td {
   position: relative;
   border: none;
-  border-right: 1px solid #ebeef5;
-  border-bottom: 1px solid #ebeef5;
   padding: 5px 0;
   height: 32px;
   text-overflow: ellipsis;
   text-decoration: inherit;
 }
-.xc-td>tbody>tr:nth-child(even)>td {
+.horizontal-border .xc-td>tbody>tr>td {
+  border-bottom: 1px solid #ebeef5;
+}
+.vertical-border .xc-td>tbody>tr>td {
+  border-right: 1px solid #ebeef5;
+}
+.stripe .xc-td>tbody>tr:nth-child(even)>td {
   background: #f9fafb;
 }
-.xc-td>tbody>tr:hover>td {
+.highlight-hover .xc-td>tbody>tr:hover>td {
   background: #F5F7FA;
 }
 .xc-td-cell {
@@ -143,18 +154,18 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
   text-decoration: inherit;
   line-height: 24px;
 }
-.xc-td-text .icon{
+.xc-td-text .icon {
   font: inherit;
   color: inherit;
   text-align: inherit;
   vertical-align: middle;
   text-decoration: none;
-  margin-right:5px;
+  margin-right: 5px;
 }
-.xc-td-text-img{
-  margin-right:5px;
-  width:20px;
-  height:20px;
+.xc-td-text-img {
+  margin-right: 5px;
+  width: 20px;
+  height: 20px;
   vertical-align: middle;
 }
 .xc-td-text-input {
@@ -229,7 +240,6 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
   left: 0;
   width: 100%;
   background: transparent;
-  border-bottom: 1px solid #ebeef5;
   padding: 0 10px;
   box-sizing: border-box;
   overflow: hidden;
@@ -241,9 +251,10 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
   text-align: inherit;
   z-index: 2;
 }
-
-/****************************** 排序 ******************************/
-
+.horizontal-border .xc-td-merge {
+  border-bottom: 1px solid #ebeef5;
+}
+/* 排序 */
 .xc-sort {
   position: relative;
   height: 12px;
@@ -274,15 +285,13 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 .xc-sort-th.desc .xc-sort-icon.desc {
   border-top-color: #409eff;
 }
-
-/****************************** 多选列 ******************************/
-
+/* 多选列 */
 .xc-chk-cell {
   position: absolute;
   top: 0;
   height: 100%;
-  border-bottom:inherit;
-  border-right:inherit;
+  border-bottom: inherit;
+  border-right: inherit;
   background: inherit;
   box-sizing: content-box;
 }
@@ -320,7 +329,8 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
   transition: transform .15s ease-in .05s;
   transform-origin: center;
 }
-.xc-chk-box.checked, .xc-chk-box.indeterminate {
+.xc-chk-box.checked,
+.xc-chk-box.indeterminate {
   background-color: #409eff;
   border-color: #409eff;
 }
@@ -339,15 +349,13 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
   top: 5px;
 }
 .forbid-select .xc-chk-box {
-  cursor:not-allowed;
+  cursor: not-allowed;
   background: #EAF0F2;
 }
 .forbid-select .xc-chk-box:hover {
   border-color: #dcdfe6;
 }
-
-/****************************** 开关 ******************************/
-
+/* 开关 */
 .xc-switch {
   position: relative;
   display: inline-block;
@@ -357,7 +365,8 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
   cursor: pointer;
   line-height: 28px;
 }
-.xc-switch-true, .xc-switch-false {
+.xc-switch-true,
+.xc-switch-false {
   position: relative;
   display: inline-block;
   width: auto;
@@ -394,9 +403,7 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 .xc-switch.open .xc-switch-false {
   display: none;
 }
-
-/****************************** 固定列 ******************************/
-
+/* 固定列 */
 .xc-fix-th {
   position: absolute;
   top: 0;
@@ -404,14 +411,16 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
   display: table;
   border: none;
   padding: 0;
-  border-bottom: 1px solid #ebeef5;
-  border-right: 1px solid #ebeef5;
-  border-left: 1px solid #ebeef5;
+  /* border-bottom: 1px solid #ebeef5; */
   background: #f5f7fa;
   height: 32px;
-  line-height: 32px;
+  /* line-height: 32px; */
   font-weight: inherit;
   text-decoration: inherit;
+}
+.vertical-border .xc-th-head>tr>th {
+  border-right: 1px solid #ebeef5;
+  /* border-left: 1px solid transparent; */
 }
 .xc-fix-th .xc-th-cell {
   display: table-cell;
@@ -434,8 +443,7 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
   top: 0;
   right: 0;
 }
-
-/****************************** 空白行 ******************************/
+/* 空白行 */
 .xc-tr-blank .xc-tr-blank-td{
   padding:0;
   background: none;
@@ -447,7 +455,7 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
   position: relative;
   width:100%;
 }
-/****************************** 下拉框 ******************************/
+/* 下拉框 */
 .xc-td-cell .vp-select-container{
   line-height: 28px;
 }

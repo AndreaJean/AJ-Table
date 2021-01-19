@@ -25,8 +25,10 @@
 </html>
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="data/table.js"></script>
-<script type="text/javascript" src="js/table.js"></script>
-<script type="text/javascript" src="js/select.js"></script>
+<!-- <script type="text/javascript" src="js/table.js"></script> -->
+<script type="text/javascript" src="js/vpTable.js"></script>
+<script type="text/javascript" src="js/vpSelect.js"></script>
+<!-- <script type="text/javascript" src="js/select.js"></script> -->
 <script type="text/javascript">
   window.onload = function () {
     let myTable = new AjTable(opt)
@@ -41,7 +43,7 @@
       myTable.$_reset()
     })
     $('#addRow').click(function () {
-      myTable.$_addRow({ name: 'C罗', age: '36', nationality: '葡萄牙', sex: '男', marriage: '2' }, 9)
+      myTable.$_addRow({ name: 'C罗', age: '36', nationality: '葡萄牙', sex: '男', marriage: '2' }, 0)
     })
     $('#getData').click(function () {
       console.log(myTable.$_getData())
@@ -95,7 +97,7 @@
   } */
   .main {
     position: relative;
-    width: 1400px;
+    width: 1000px;
     height: 500px;
     /* height:auto; */
     border: 1px solid #ebeef5;

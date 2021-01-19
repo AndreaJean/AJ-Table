@@ -47,7 +47,6 @@ const opts = [
   {label: '意大利', value: '意大利', selected: false},
   {label: '法国', value: '法国', selected: false},
   {label: '西班牙', value: '西班牙', selected: false},
-  {label: '巴西', value: '巴西', selected: false},
   {label: '葡萄牙', value: '葡萄牙', selected: false},
   {label: '巴西', value: '巴西', selected: false},
   {label: '德国', value: '德国', selected: false}
@@ -91,19 +90,19 @@ let thData = [
   { key: 'num', label: '序号', type: 'no', width: '100px', color: '', align: 'center' },
   { key: 'name', label: '姓名', type: 'text', width: '100px', color: 'red', align: 'left', sort: true, isBreak: false, preImg: 'https://wwc.alicdn.com/avatar/getAvatar.do?userNick=&width=50&height=50&type=sns&_input_charset=UTF-8' },
   { key: 'age', label: '年龄年龄年龄年龄年龄年龄年龄', type: 'text', width: '100px', color: '', align: 'left', preIcon: 'icon-new-xinwen-copy', isEdit: true, sort: true },
-  { key: 'nationality', label: '国籍', type: 'select', options: opts, selectWidth: '100px', preText: '选择', defaultVal: '中国', isMultiple: false, showClear: true, showTree: false, placeholder: '国籍' },
+  { key: 'nationality', label: '国籍', type: 'select', options: opts, selectWidth: '100px', preText: '选择', defaultVal: '中国', isMultiple: true, showClear: true, showTree: false, placeholder: '国籍' },
   // { key: 'region', label: '区域', type: 'select', options: trees, selectWidth: '100px', preText: '选择', defaultVal: '', isMultiple: false, showClear: true, showTree: true, placeholder: '区域' },
   { key: 'marriage', label: '婚否', type: 'switch', width: '100px', align: 'center', trueVal: '1', trueLabel: '已婚', falseVal: '2', falseLabel: '未婚' },
-  { key: 'sex', label: '性别性别', type: 'text', width: '', color: '', align: 'center', mergeCell: true },
+  { key: 'sex', label: '性别性别', type: 'text', width: '100px', color: '', align: 'center', mergeCell: true },
   { key: 'photo', isShow: false, label: '照片', type: 'img', width: '', align: 'center', imgW: '', imgH: '80px' },
-  { key: 'count', label: '统计', type: 'input', inputType: 'text', inputWidth: '60px', defaultVal: '0', preText: '共', nextText: '条', placeholder: '请输入中文' },
+  { key: 'count', label: '统计', type: 'input', inputType: 'text', width: '200px', inputWidth: '60px', defaultVal: '0', preText: '共', nextText: '条', placeholder: '请输入中文' },
   // { label: '标签', type: 'html', width: '220px', align: 'left', htmlCode: '<h2>自定义HTML片断</h2>' },
   { label: '操作', type: 'button', width: '300px', align: 'center', btns: testBtn }
 ]
 let tdData = [
   { forbidSel: true, name: '刘翔', age: '', nationality: '', sex: '女', count: '3', marriage: '1', forbidBtn: ['donwload', 'edit'], photo: 'https://pic.xiami.net/images/artistlogo/60/13751627012360.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
   { name: '李娜李娜李娜李娜李娜李娜李娜', age: '', nationality: '', sex: '男', count: '35', marriage: '2', photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039605_405E.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
-  { forbidSel: true, name: '卡卡', age: '39', nationality: '巴西', sex: '男', marriage: '1', photo: 'https://pic.xiami.net/images/artistlogo/60/13751627012360.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
+  { forbidSel: true, name: '卡卡', age: 0, nationality: '巴西', sex: '男', marriage: '1', photo: 'https://pic.xiami.net/images/artistlogo/60/13751627012360.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
   { forbidSel: true, name: '贝克汉姆', age: '54', nationality: '英国', sex: '女', count: '22', marriage: '1', photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039645_Qy82.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
   { name: '厄齐尔', age: '51', nationality: '德国', sex: '女', count: '14', marriage: '2', photo: 'https://pic.xiami.net/images/artistlogo/60/13751627012360.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
   { name: '本泽马', age: '42', nationality: '法国', sex: '男', count: '17', marriage: '2', photo: 'https://pic.xiami.net/images/artistpic/24/23424/1247039605_405E.jpg?x-oss-process=image/resize,s_370,m_fill/quality,q_80' },
@@ -137,6 +136,12 @@ let opt = {
   sortKey: 'name',
   sortType: 'asc',
   noDataText: '好像没有数据呢~~',
+  stripe: false, // 是否隔行变色
+  highlightHover: false, // 是否隔行变色
+  border: {
+    horizontal: false, // 是否带有横向边框
+    vertical: false // 是否带有纵向边框
+  },
   switchSet: {
     padding: 4,
     speed: 300,
@@ -210,6 +215,9 @@ let opt = {
     },
     selectOver: function (data, tableObj, selectObj) {
       console.log('selectOver', data)
+    },
+    inputBlur: function (data, tableObj) {
+      console.log('inputBlur', data)
     },
     over: function (data) {
       console.log('表格加载完毕')

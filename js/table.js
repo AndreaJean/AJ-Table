@@ -1,5 +1,6 @@
 let AjTable = function (options) {
   let newObj = {
+    isIE11: false,
     thData: [],
     tdData: [],
     box: null,
@@ -20,6 +21,10 @@ let AjTable = function (options) {
     selectData: {}, // 存储下拉选列的下拉框对象
     myTableInterval: {},
     init (th, td) {
+      let userAgent = navigator.userAgent
+      if (userAgent.indexOf('Trident') > -1 && userAgent.indexOf('rv:11.0') > -1) {
+        this.isIE11 = true
+      }
       let errorMessage = this.checkData(th)
       if (errorMessage.length) {
         alert(errorMessage)
@@ -41,7 +46,6 @@ let AjTable = function (options) {
         this.option.fixTh = true
       }
       this.box = $('#' + this.option.id)
-      // this.box.find('table').remove()
       this.box.find('.xc-td-box').remove()
       this.box.find('.xc-th-box').remove()
       this.colNum = this.thColData.length
@@ -112,22 +116,32 @@ let AjTable = function (options) {
     },
     // 整理真实数据，将下拉选和输入框的默认值赋予空值行
     modifyTdData () {
-      this.tdData.forEach(item => {
+      this.tdData.forEach((item, index) => {
+        item['vp-row-index'] = index
         this.thData.forEach(col => {
           if (['select', 'input'].includes(col.type) && !this.utils.checkNull(item[col.key]) && this.utils.checkNull(col.defaultVal)) {
             item[col.key] = col.defaultVal
+            if (col.type === 'select') {
+              let arr = []
+              col.options.forEach(opt => {
+                if (opt.value === col.defaultVal) {
+                  arr.push(opt)
+                }
+              })
+              item[col.key + '_info'] = arr
+            }
           }
         })
       })
     },
     // 生成html
     createHtml () {
-      let htmlTh = '<thead class="xc-th-head">' + this.createThead() + '</thead>'
-      let htmlTd = '<tbody class="xc-th-body">' + this.createRow() + '</tbody>'
-      let htmlThBox = '<div class="xc-th-box"><table class="xc-th" cellpadding="0" cellspacing="0" border="0">' + htmlTh + '</table></div>'
-      let htmlTdBox = '<div class="xc-td-box"><table class="xc-td" cellpadding="0" cellspacing="0" border="0">' + htmlTd + '</table></div>'
-      let htmlNoData = '<div class="xc-td-box"><span class="xc-td-no-data">' + this.option.noDataText + '</span></div>'
-      let htmlThTd = '<div class="xc-td-box"><table class="xc-td" cellpadding="0" cellspacing="0" border="0">' + htmlTh + htmlTd + '</table></div>'
+      let htmlTh = `<thead class="xc-th-head">${this.createThead()}</thead>`
+      let htmlTd = `<tbody class="xc-th-body">${this.createRow()}</tbody>`
+      let htmlThBox = `<div class="xc-th-box"><table class="xc-th" cellpadding="0" cellspacing="0" border="0">${htmlTh}</table></div>`
+      let htmlTdBox = `<div class="xc-td-box"><table class="xc-td" cellpadding="0" cellspacing="0" border="0">${htmlTd}</table></div>`
+      let htmlNoData = `<div class="xc-td-box"><span class="xc-td-no-data">${this.option.noDataText}</span></div>`
+      let htmlThTd = `<div class="xc-td-box"><table class="xc-td" cellpadding="0" cellspacing="0" border="0">${htmlTh + htmlTd}</table></div>`
       let html = ''
       if (this.option.noTh) {
         html += this.noDataFlag ? htmlNoData : htmlTdBox
@@ -136,6 +150,20 @@ let AjTable = function (options) {
       } else {
         html += this.noDataFlag ? (htmlThBox + htmlNoData) : htmlThTd
       }
+
+      if (this.option.stripe) {
+        this.box.addClass('stripe')
+      }
+      if (this.option.highlightHover) {
+        this.box.addClass('highlight-hover')
+      }
+      if (this.option.border.horizontal) {
+        this.box.addClass('horizontal-border')
+      }
+      if (this.option.border.vertical) {
+        this.box.addClass('vertical-border')
+      }
+
       this.box.append(html)
       this.thBox = this.box.find('.xc-th-box')
       this.tdBox = this.box.find('.xc-td-box')
@@ -153,14 +181,13 @@ let AjTable = function (options) {
     // 生成表头
     createThead () {
       let opt = this.option.thStyle
-      let thStyle = 'border-color:' + opt.borderColor + ';' +
-                  'background-color:' + opt.bgColor + ';' +
-                  'height:' + opt.height + ';'
-      let cellStyle = 'color:' + opt.color + ';' +
-                  // 'line-height:' + opt.height + ';' +
-                  'font-size:' + opt.fontSize + ';' +
-                  'font-weight:' + opt.fontBold + ';' +
-                  'text-align:' + opt.align + ';'
+      let thStyle = `border-color:${opt.borderColor};
+                     background-color:${opt.bgColor};
+                     height:${opt.height};`.trim()
+      let cellStyle = `color:${opt.color}; 
+                       font-size:${opt.fontSize};
+                       font-weight:${opt.fontBold};
+                       text-align:${opt.align};`.trim()
 
       let html = ''
       this.thData.forEach((item, i) => {
@@ -175,7 +202,7 @@ let AjTable = function (options) {
           html += this.createTh(item, i, thStyle, cellStyle, false)
         })
       }
-      return '<tr>' + html + '</tr>'
+      return `<tr>${html}</tr>`
     },
     // 生成表头单元格
     createTh (item, index, thStyle, cellStyle, isFirst) {
@@ -183,11 +210,11 @@ let AjTable = function (options) {
       let sortStle = ''
       let sortAttr = ''
       let sortClass = ''
-      let title = ' title="' + item.label + '">'
+      let title = ` title="${item.label}">`
       if (item.sort) {
         sortIcon = '<span class="xc-sort"><i class="xc-sort-icon asc"></i><i class="xc-sort-icon desc"></i></span>'
         sortStle = 'cursor:pointer;'
-        sortAttr = 'sort-key="' + item.key + '"'
+        sortAttr = `sort-key="${item.key}"`
         sortClass = item.key === this.option.sortKey ? (this.option.sortType === 'asc' ? 'asc' : 'desc') : ''
       }
       if (item.label.includes('<') && item.label.includes('>')) {
@@ -196,24 +223,24 @@ let AjTable = function (options) {
 
       let mergeType = ''
       if (this.secondThData.length && isFirst) {
-        mergeType = this.utils.checkNull(item.children) ? (' colspan="' + item.children.length + '"') : (' rowspan="2"')
+        mergeType = this.utils.checkNull(item.children) ? (` colspan="${item.children.length}"`) : (' rowspan="2"')
       }
       let html = ''
-      let thClass = 'xc-th-th ' + item.key + (item.bakKey ? (' ' + item.bakKey) : '')
+      let thClass = `xc-th-th ${item.key + (item.bakKey ? (' ' + item.bakKey) : '')}`
       let thCellClass = 'xc-th-cell ' + item.key + (item.bakKey ? (' ' + item.bakKey) : '') + (item.sort ? (' xc-sort-th ' + sortClass) : '')
-      html += '<th' + mergeType + ' class="' + thClass + '" style="' + thStyle + '" col-key="' + item.key + '"' + title +
-                  '<div class="' + thCellClass + '" style="' + cellStyle + sortStle + '" ' + sortAttr + '>' +
-                  item.label + sortIcon +
-                '</div>'
+      html += `<th${mergeType} class="${thClass}" style="${thStyle}" col-key="${item.key}"${title}
+                  <div class="${thCellClass}" style="${cellStyle + sortStle}" ${sortAttr}>
+                  ${item.label + sortIcon}
+                </div>`.trim()
       // 添加多选列
       if (this.option.multiSelect && index === 0 && isFirst) {
         html += this.addChkCell(true)
       }
       // 修补因出现滚动条产生的空白
       if (index === this.thData.length - 1 && this.option.fixTh) {
-        let st = 'width:' + this.option.scrollBarWidth + 'px;' +
-        'right:-' + (this.option.scrollBarWidth + 1) + 'px;'
-        html += '<div class="xc-th-cell-scrollbar" style="' + st + '""></div>'
+        let st = `width:${this.option.scrollBarWidth}px;
+                 right:-${this.option.scrollBarWidth + (this.option.border.vertical ? 1 : 0)}px;`
+        html += `<div class="xc-th-cell-scrollbar" style="${st}"></div>`
       }
       html += '</th>'
       return html
@@ -223,7 +250,7 @@ let AjTable = function (options) {
       let html = ''
       this.tdData.forEach((row, index) => {
         let forbidSel = row.forbidSel ? 'forbid-select' : ''
-        html += '<tr row-data=\'' + JSON.stringify(row) + '\' row-index="' + index + '" class=\'xc-td-row ' + forbidSel + '\'>'
+        html += `<tr row-data='${JSON.stringify(row)}' row-index="${index}" class='xc-td-row ${forbidSel}'>`
         let i = 0
         this.thColData.forEach(col => {
           html += this.createTd(col, index, i)
@@ -237,12 +264,12 @@ let AjTable = function (options) {
     createTd (col, rowIndex, colIndex) {
       let style = rowIndex % 2 === 0 ? this.getTdStyle(this.option.oddStyle, col) : this.getTdStyle(this.option.evenStyle, col)
       let data = this.tdData[rowIndex]
-      let editAttr = 'class="' + (col.isEdit ? 'xc-td-edit' : '') + '" ' +
-                      'row-index="' + rowIndex + '" ' +
-                      ('col-key="' + (col.key || '') + '"') +
+      let editAttr = `class="${col.isEdit ? 'xc-td-edit' : ''}" 
+                      row-index="${rowIndex}" 
+                      col-key="${col.key || ''}" ` +
                       (col.bakKey ? ('col-key-bak="' + col.bakKey + '"') : '')
 
-      let html = '<td style="' + style.td + '" ' + editAttr + '>'
+      let html = `<td style="${style.td}" ${editAttr}>`
       if (this.option.multiSelect && colIndex === 0) {
         html += this.addChkCell(false, rowIndex)
       }
@@ -253,7 +280,7 @@ let AjTable = function (options) {
       let inner = ''
       switch (col.type) {
       case 'no':
-        inner = '<span class="xc-td-text ' + col.key + '">' + (rowIndex + 1) + '</span>'
+        inner = `<span class="xc-td-text ${col.key}">${rowIndex + 1}</span>`
         break
       case 'text':
         inner = this.addText(col, data, style)
@@ -288,24 +315,22 @@ let AjTable = function (options) {
         width = parseInt(width) - 1
       }
       let style = []
-      style.td = 'background-color:' + opt.bgColor + ';' +
-                  'width:' + width + 'px;' +
-                  'border-color:' + opt.borderColor + ';' +
-                  'text-align:' + (col.align || opt.align) + ';'
-      style.cell = 'width:' + width + 'px;' +
-                  // 'height:' + opt.height + ';' +
-                  'line-height:' + opt.height + ';' +
-                  'color:' + (col.color || opt.color) + ';' +
-                  'font-size:' + opt.fontSize + ';' +
-                  'font-weight:' + opt.fontBold + ';'
-      style.text = 'line-height:' + opt.height + ';'
+      style.td = `background-color:${opt.bgColor};
+                  width:${width}px;
+                  border-color:${opt.borderColor};
+                  text-align:${col.align || opt.align};`
+      style.cell = `width:${width}px;
+                    line-height:${opt.height};
+                    color:${col.color || opt.color};
+                    font-size:${opt.fontSize};
+                    font-weight:${opt.fontBold};`
+      style.text = `line-height:${opt.height};`
       return style
     },
     // 添加多选单元格
     addChkCell (isThChk, rowIndex) {
       // console.log(isThChk, rowIndex)
-      let style = 'left:' + (-this.option.multiSelColWidth) + 'px;' +
-                  'width:' + this.option.multiSelColWidth + 'px;'
+      let style = `left:${-this.option.multiSelColWidth}px;width:${this.option.multiSelColWidth}px;`
       let html = '<div style="' + style + '" class="xc-chk-cell">' +
                     '<span class="xc-chk-box ' + (isThChk ? 'xc-th-chk' : 'xc-td-chk') + '" row-index="' + (isThChk ? '' : rowIndex) + '"></span>' +
                   '</div>'
@@ -327,7 +352,7 @@ let AjTable = function (options) {
       }
       let title = (data[col.key] || '---').toString().replace(/<\/?[^>]*>/g, ' ') // 去除dom标签
       let className = 'xc-td-text ' + col.key + (col.bakKey ? (' ' + col.bakKey) : '')
-      let inner = '<span title="' + title + '" class="xc-td-text ' + col.key + '" style="' + style + '">' + img + icon + (data[col.key] || '---') + '</span>'
+      let inner = '<span title="' + title + '" class="' + className + '" style="' + style + '">' + img + icon + (this.utils.checkNull(data[col.key]) ? data[col.key] : '---') + '</span>'
       if (col.isEdit) {
         inner += '<input class="xc-td-text-input ' + col.key + '" type="text" />'
       }
@@ -376,7 +401,7 @@ let AjTable = function (options) {
                         col.key + ' ' +
                         btn.key + '"'
         inner += '<button ' + attr + className + '>' +
-                    '<i class="xc-td-btn-icon ' + btn.iconClass + '"></i>' +
+                   (this.utils.checkNull(btn.iconClass) ? ('<i class="xc-td-btn-icon ' + btn.iconClass + '"></i>') : '') +
                     btn.label +
                   '</button>'
       })
@@ -401,8 +426,6 @@ let AjTable = function (options) {
       boxs.each(function () {
         if ($(this).css('display') === 'none' && !vm.utils.checkNull(panel)) {
           panel = $(this)
-        } else {
-          return false
         }
       })
       if (vm.box.css('display') === 'none') {
@@ -430,6 +453,9 @@ let AjTable = function (options) {
     adjust (resetFlag) {
       if (this.option.heightAuto) {
         this.box.height(this.thTable.outerHeight() + this.tdTable.outerHeight())
+        if (this.isIE11) {
+          this.tdBox.css('overflow-y', 'hidden')
+        }
       }
       // 表格总宽度是否固定
       if (this.option.fixTableWidth) {
@@ -445,7 +471,7 @@ let AjTable = function (options) {
         this.secondThData.length ? this.ajustColWidthD() : this.ajustColWidthS()
         // 重复一遍，防止表头列宽调整后，有某列表头文字从多行变为一行使表头高度发生变化
         if (this.option.heightAuto) {
-          this.box.height(this.thTable.outerHeight() + this.tdTable.outerHeight())
+          this.box.height(this.thTable.outerHeight() + this.tdTable.outerHeight() + (this.isIE11 ? 1 : 0))
         }
         if (this.option.fixTableWidth) {
           this.tdTable.css('width', this.getFixTableWidth())
@@ -453,6 +479,10 @@ let AjTable = function (options) {
         this.tdBox.css('top', this.thTable.outerHeight())
         this.secondThData.length ? this.ajustColWidthD() : this.ajustColWidthS()
       } else if (this.noDataFlag) {
+        if (this.option.heightAuto) {
+          this.box.height(this.thTable.outerHeight() + 100)
+        }
+        this.tdBox.css('top', this.thTable.outerHeight())
         this.thTable.width(this.getFixTableWidth())
       }
       // 最右侧一列表头及单元格右边线处理
@@ -482,12 +512,11 @@ let AjTable = function (options) {
         }
         vm.bindEvent()
 
-        let userAgent = navigator.userAgent
-        if (userAgent.indexOf('Trident') > -1 && userAgent.indexOf('rv:11.0') > -1) {
-          $('.xc-chk-cell').each(function () {
+        if (vm.isIE11) {
+          vm.box.find('.xc-chk-cell').each(function () {
             $(this).height($(this).parent().outerHeight())
           })
-          $('.xc-td>tbody>tr>td').css('border-bottom', 'none')
+          vm.box.find('.xc-td>tbody>tr>td').css('border-bottom', 'none')
         }
 
         if (vm.option.callback.over && !resetFlag) {
@@ -692,12 +721,13 @@ let AjTable = function (options) {
     },
     // 复制固定表头
     copyTh (pos) {
-      let html = pos === 'left' ? this.thTable.find('th:first').html() : this.thTable.find('th:last').html()
-      let style = pos === 'left' ? this.thTable.find('th:first').attr('style') : this.thTable.find('th:last').attr('style')
-      let styleL = this.option.multiSelect ? (pos + ':' + (this.option.multiSelColWidth - 1) + 'px;') : (pos + ':-1px;')
-      let styleR = this.thTable.find('.xc-th-cell-scrollbar').css('display') === 'none' ? (pos + ':0px;') : (pos + ':' + this.option.scrollBarWidth + 'px;')
+      let tartget = pos === 'left' ? this.thTable.find('th:first') : this.thTable.find('th:last')
+      let html = tartget.html()
+      let style = tartget.attr('style') + `height:${tartget.outerHeight()}px;`
+      let styleL = this.option.multiSelect ? `${pos}:${this.option.multiSelColWidth - 1}px;` : `${pos}:-1px;`
+      let styleR = this.thTable.find('.xc-th-cell-scrollbar').css('display') === 'none' ? `${pos}:0px;` : `${pos}:${this.option.scrollBarWidth}px;`
       style += pos === 'left' ? styleL : styleR
-      html = '<div class="xc-fix-th ' + (pos === 'left' ? 'first' : 'last') + '" style="' + style + '">' + html + '</div>'
+      html = `<div class="xc-fix-th ${pos === 'left' ? 'first' : 'last'}" style="${style}">${html}</div>`
       this.thBox.append(html)
     },
     // 复制固定单元格
@@ -748,9 +778,10 @@ let AjTable = function (options) {
             arr.push(a.value)
           })
           nv[col.key] = arr.join(',')
+          nv[col.key + '_info'] = vm.utils.deepCopy(data)
           vm.tdData[rowIndex] = vm.utils.deepCopy(nv)
 
-          let param = {key: col.key, selData: data, data: vm.tdData[rowIndex], rowIndex: rowIndex}
+          let param = {key: col.key, data: vm.tdData[rowIndex], rowIndex: rowIndex}
           if (vm.option.callback.selectOver) {
             vm.option.callback.selectOver(param, vm, selectObj)
           }
@@ -945,17 +976,6 @@ let AjTable = function (options) {
         }
       })
     },
-    // 输入框失去焦点事件
-    onInputBlur () {
-      let vm = this
-      let target = vm.tdTable.find('.xc-td-input')
-      target.unbind('blur').blur(function () {
-        let val = $(this).val()
-        let rowIndex = $(this).attr('row-index')
-        let key = $(this).attr('col-key')
-        vm.tdData[rowIndex][key] = val
-      })
-    },
     // 开关滑块动画
     switchAction (target, flag) {
       let gap = this.option.switchSet.padding
@@ -968,6 +988,21 @@ let AjTable = function (options) {
       } else {
         ball.animate({ left: gap + 'px' }, speed, easing)
       }
+    },
+    // 输入框失去焦点事件
+    onInputBlur () {
+      let vm = this
+      let target = vm.tdTable.find('.xc-td-input')
+      target.unbind('blur').blur(function () {
+        let val = $(this).val()
+        let rowIndex = $(this).attr('row-index')
+        let key = $(this).attr('col-key')
+        vm.tdData[rowIndex][key] = val
+        if (vm.option.callback.inputBlur) {
+          let param = {key: key, data: vm.tdData[rowIndex], rowIndex: rowIndex}
+          vm.option.callback.inputBlur(param, vm)
+        }
+      })
     },
     // 表身横向滚动监听
     scrollListener () {
@@ -1042,7 +1077,7 @@ let AjTable = function (options) {
     },
     // 获取当前表格数据
     $_getData () {
-      return this.tdData
+      return this.utils.deepCopy(this.tdData)
     },
     // 重新调整列宽
     $_reset () {
@@ -1102,7 +1137,7 @@ let AjTable = function (options) {
     // 添加行
     $_addRow (dataObj, rowIndex) {
       let obj = this.utils.deepCopy(dataObj)
-      let index = (rowIndex && rowIndex > 0 && rowIndex < this.tdData.length) ? rowIndex : this.tdData.length
+      let index = (this.utils.checkNull(rowIndex) && rowIndex >= 0 && rowIndex < this.tdData.length) ? rowIndex : this.tdData.length
       this.tdData.splice(index, 0, obj)
       this.init(this.thData, this.tdData)
       if (this.option.callback.addOver) {
@@ -1231,6 +1266,12 @@ let AjTable = function (options) {
     sortKey: '', // 排序字段名称
     sortType: '', // 排序方式，asc为升序，desc为降序
     noDataText: '暂无数据', // 无数据时表身区域的显示内容，支持自定义html片断
+    stripe: true, // 是否隔行变色
+    highlightHover: true, // 行是否滑上变色
+    border: {
+      horizontal: true, // 是否带有横向边框
+      vertical: true // 是否带有纵向边框
+    },
     // 开关样式及效果
     switchSet: {
       padding: 4, // 滑块距边框距离
@@ -1272,6 +1313,7 @@ let AjTable = function (options) {
       editOver: null, // 文字单元格双击修改内容后，输入框失去焦点事件
       btnClick: null, // 按钮点击事件
       switchOver: null, // 开关点击事件
+      inputBlur: null, // 输入框失去焦点事件
       selectOver: null, // 下拉选值改变事件
       setData: null, // 表格赋值后
       deleteOver: null, // 删除某一行数据后
