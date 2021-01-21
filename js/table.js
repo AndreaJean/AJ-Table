@@ -331,9 +331,9 @@ let AjTable = function (options) {
     addChkCell (isThChk, rowIndex) {
       // console.log(isThChk, rowIndex)
       let style = `left:${-this.option.multiSelColWidth}px;width:${this.option.multiSelColWidth}px;`
-      let html = '<div style="' + style + '" class="xc-chk-cell">' +
-                    '<span class="xc-chk-box ' + (isThChk ? 'xc-th-chk' : 'xc-td-chk') + '" row-index="' + (isThChk ? '' : rowIndex) + '"></span>' +
-                  '</div>'
+      let html = `<div style="${style}" class="xc-chk-cell">
+                    <span class="xc-chk-box ${isThChk ? 'xc-th-chk' : 'xc-td-chk'}" row-index="${isThChk ? '' : rowIndex}"></span>
+                  </div>`
       return html
     },
     // 添加文字内容
@@ -345,65 +345,60 @@ let AjTable = function (options) {
         style += 'word-wrap:break-word;white-space:pre-line;'
       }
       if (col.preIcon) {
-        icon = '<i class="icon iconfont ' + col.preIcon + '"></i>'
+        icon = `<i class="icon iconfont ${col.preIcon}"></i>`
       }
       if (col.preImg) {
-        img = '<img class="xc-td-text-img ' + col.key + '" src="' + col.preImg + '" />'
+        img = `<img class="xc-td-text-img ${col.key}" src="${col.preImg}" />`
       }
       let title = (data[col.key] || '---').toString().replace(/<\/?[^>]*>/g, ' ') // 去除dom标签
       let className = 'xc-td-text ' + col.key + (col.bakKey ? (' ' + col.bakKey) : '')
-      let inner = '<span title="' + title + '" class="' + className + '" style="' + style + '">' + img + icon + (this.utils.checkNull(data[col.key]) ? data[col.key] : '---') + '</span>'
+      let inner = `<span title="${title}" class="${className}" style="${style}">${img + icon}<span>${this.utils.checkNull(data[col.key]) ? data[col.key] : '---'}</span></span>`
       if (col.isEdit) {
-        inner += '<input class="xc-td-text-input ' + col.key + '" type="text" />'
+        inner += `<input class="xc-td-text-input ${col.key}" type="text" />`
       }
       return inner
     },
     // 添加输入框
     addInput (col, data, rowIndex) {
-      let style = this.utils.checkNull(col.inputWidth) ? ('style="width:' + col.inputWidth + ';" ') : ''
-      let value = 'value="' + (data[col.key] || col.defaultVal || '') + '" '
-      let title = 'title="' + (data[col.key] || col.defaultVal || '') + '" '
-      let dataVal = 'row-index="' + rowIndex + '" col-key="' + col.key + '" '
-      let html = '<input type="' + col.inputType + '" ' + value + dataVal + title + style + 'placeholder="' + (col.placeholder || '') + '" class="xc-td-input" />'
+      let style = this.utils.checkNull(col.inputWidth) ? `style="width:${col.inputWidth};"` : ''
+      let value = `value="${data[col.key] || col.defaultVal || ''}"`
+      let title = `title="${data[col.key] || col.defaultVal || ''}"`
+      let dataVal = `row-index="${rowIndex}" col-key="${col.key}"`
+      let html = `<input type="${col.inputType}" ${value} ${dataVal} ${title} ${style} placeholder="${col.placeholder || ''}" class="xc-td-input" />`
       html = (col.preText || '') + html + (col.nextText || '')
       return html
     },
     // 添加图片内容
     addImg (col, data) {
       let src = data[col.key]
-      let css = 'width:' + (col.imgW || '') + ';height:' + (col.imgH || '') + ';'
-      let attr = 'class="xc-td-img ' + col.key + '"' +
-                'src="' + src + '"' +
-                'alt="' + col.label + '"' +
-                'style="' + css + '"'
-      return '<img ' + attr + ' />'
+      let css = `width:${col.imgW || ''};height:${col.imgH || ''};`
+      let attr = `class="xc-td-img ${col.key}" src="${src}" alt="${col.label}" style="${css}"`
+      return `<img ${attr} />`
     },
     // 添加开关
     addSwitch (col, data, rowIndex) {
       let inner = ''
-      let attr = 'col-key="' + col.key + '" row-data=\'' + JSON.stringify(data) + '\' row-index=\'' + rowIndex + '\' true-val="' + col.trueVal + '" false-val="' + col.falseVal + '" name="' + col.name + '"'
+      let attr = `col-key="${col.key}" row-data='${JSON.stringify(data)}' row-index='${rowIndex}' true-val="${col.trueVal}" false-val="${col.falseVal}" name="${col.name}"`
       let isOpen = data[col.key].toString() === col.trueVal
-      inner += '<div ' + attr + ' class="xc-switch ' + col.key + ' ' + (isOpen ? 'open' : '') + '">' +
-                '<span class="xc-switch-true"> ' + col.trueLabel + '</span>' +
-                '<i class="xc-switch-icon"></i>' +
-                '<span class="xc-switch-false"> ' + col.falseLabel + '</span>' +
-              '</div>'
+      inner += `<div ${attr} class="xc-switch ${col.key} ${isOpen ? 'open' : ''}">
+                  <span class="xc-switch-true">${col.trueLabel}</span>
+                  <i class="xc-switch-icon"></i>
+                  <span class="xc-switch-false">${col.falseLabel}</span>
+                </div>`
       return inner
     },
     // 添加按钮
     addBtns (col, rowIndex, data) {
       let inner = ''
       col.btns.forEach(btn => {
-        let attr = 'btn-key="' + btn.key + '" row-index="' + rowIndex + '"'
-        let className = 'class="xc-td-btn ' +
-                        (data.forbidBtn && data.forbidBtn.includes(btn.key) ? ' forbid ' : '') +
-                        (btn.type === 'link' ? ' link-style ' : '') +
-                        col.key + ' ' +
-                        btn.key + '"'
-        inner += '<button ' + attr + className + '>' +
-                   (this.utils.checkNull(btn.iconClass) ? ('<i class="xc-td-btn-icon ' + btn.iconClass + '"></i>') : '') +
-                    btn.label +
-                  '</button>'
+        let attr = `btn-key="${btn.key}" row-index="${rowIndex}"`
+        let className = `class="xc-td-btn 
+                                ${data.forbidBtn && data.forbidBtn.includes(btn.key) ? 'forbid ' : ''}
+                                ${btn.type === 'link' ? 'link-style' : ''} 
+                                ${col.key} ${btn.key}"`
+        inner += `<button ${attr} ${className}>
+                    ${this.utils.checkNull(btn.iconClass) ? `<i class="xc-td-btn-icon ${btn.iconClass}"></i>` : ''} ${btn.label}
+                  </button>`
       })
       return inner
     },
@@ -471,7 +466,8 @@ let AjTable = function (options) {
         this.secondThData.length ? this.ajustColWidthD() : this.ajustColWidthS()
         // 重复一遍，防止表头列宽调整后，有某列表头文字从多行变为一行使表头高度发生变化
         if (this.option.heightAuto) {
-          this.box.height(this.thTable.outerHeight() + this.tdTable.outerHeight() + (this.isIE11 ? 1 : 0))
+          let flag = this.tdTable.outerWidth() > this.box.width()
+          this.box.height(this.thTable.outerHeight() + this.tdTable.outerHeight() + (flag ? this.option.scrollBarWidth : 0))
         }
         if (this.option.fixTableWidth) {
           this.tdTable.css('width', this.getFixTableWidth())
@@ -929,10 +925,11 @@ let AjTable = function (options) {
         let ov = cell.find('.xc-td-text')
         let nv = cell.find('.xc-td-text-input')
         ov.css('display', 'none')
-        nv.val(ov.html()).css('display', 'block').focus()
+        nv.val(ov.find('span').text()).css('display', 'block').focus()
 
         nv.unbind('blur').blur(function () {
-          ov.html(nv.val()).css('display', '')
+          ov.css('display', '')
+          ov.find('span').html(nv.val())
           nv.css('display', 'none')
           let obj = {
             editKey: cell.attr('col-key'),
@@ -969,7 +966,7 @@ let AjTable = function (options) {
 
         let nv = JSON.parse(btn.attr('row-data'))
         nv[btn.attr('col-key')] = obj.newValue
-        vm.tdData[btn.attr('row-index')] = this.utils.deepCopy(nv)
+        vm.tdData[btn.attr('row-index')] = vm.utils.deepCopy(nv)
 
         if (vm.option.callback.switchOver) {
           vm.option.callback.switchOver(obj, vm)
